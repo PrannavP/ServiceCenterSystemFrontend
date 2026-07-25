@@ -1,0 +1,169 @@
+.list-container {
+    background: #fff;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 5px 20px rgba(0,0,0,.05);
+    width: 100%;
+    overflow: hidden; /* Prevent page overflow */
+}
+
+.list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.list-header h2 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.list-header-action {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.list-create-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 40px;
+    padding: 9px 16px;
+    color: #fff;
+    background: #16a34a;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: .2s;
+}
+
+.list-create-btn:hover {
+    background: #15803d;
+}
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: auto;
+    max-height: 70vh;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    scrollbar-width: none;
+}
+
+.table-wrapper::-webkit-scrollbar {
+    display: none;
+}
+
+.custom-table {
+    width: 100%;
+    min-width: 1200px; /* Keeps columns readable */
+    border-collapse: collapse;
+}
+
+.custom-table th,
+.custom-table td {
+    padding: 14px 18px;
+    white-space: nowrap;
+    text-align: left;
+    border-bottom: 1px solid #ececec;
+}
+
+.custom-table thead th {
+    background: #f8fafc;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    font-weight: 600;
+}
+
+.custom-table tbody tr:hover {
+    background: #f8fbff;
+}
+
+.action-column {
+    width: 110px;
+}
+
+.edit-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 7px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: .2s;
+}
+
+.edit-btn:hover {
+    background: #1d4ed8;
+}
+
+.generate-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #16a34a;
+    color: white;
+    border: none;
+    padding: 7px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: .2s;
+}
+
+.generate-btn:hover {
+    background: #19d251;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 72px;
+    padding: 5px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.status-badge.active {
+    color: #166534;
+    background: #dcfce7;
+}
+
+.status-badge.inactive {
+    color: #991b1b;
+    background: #fee2e2;
+}
+
+.loading,
+.empty-state {
+    padding: 30px;
+    text-align: center;
+    color: #666;
+}
+
+@media (max-width: 640px) {
+    .list-header {
+        align-items: stretch;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .list-header-action,
+    .list-create-btn {
+        width: 100%;
+    }
+}
