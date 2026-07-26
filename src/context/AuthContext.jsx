@@ -22,7 +22,6 @@ export function AuthProvider({ children }) {
             try {
                 return JSON.parse(savedUser);
             } catch (e) {
-                // Ignore parse error
             }
         }
         const savedToken = localStorage.getItem("token");

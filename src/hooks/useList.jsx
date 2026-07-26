@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import useAuthApi from "../api/useAuthApi";
-import { FiEdit2 } from "react-icons/fi";
+import { toast } from "react-toastify";
+import { FiEdit2, FiTrash2 } from "react-icons/fi";
 
 export default function useList({
     title,
@@ -8,11 +9,16 @@ export default function useList({
     columns = [],
     onEdit,
     onGenerate,
+    isGenerated,
     print = false,
     generate = false,
-    headerAction
+    headerAction,
+    deleteEndpoint,
+    getId,
+    deleteLabel = "this item"
 }) {
     const { callApi } = useAuthApi();
+    const [deletingId, setDeletingId] = useState(null);
 
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -36,6 +42,40 @@ export default function useList({
         fetchList();
     }, [endpoint]);
 
+    const resolveId = (item) =>
+        getId ? getId(item) : item.id ?? item.jobcard_number ?? item.bill_id ?? item.receipt_id ?? item.part_id;
+
+    const handleDelete = async (item) => {
+        const id = resolveId(item);
+        if (id == null) return;
+        if (!window.confirm(`Delete ${deleteLabel}? This cannot be undone.`)) return;
+
+        setDeletingId(id);
+        const res = await callApi({
+            url: `${deleteEndpoint}/${id}`,
+            method: "DELETE",
+            showToast: true,
+        });
+        setDeletingId(null);
+
+        if (res !== null) {
+            toast.success("Deleted successfully.");
+            fetchList();
+        }
+    };
+
+    const formatDate = (value) => {
+        const d = new Date(value);
+        if (isNaN(d.getTime())) return value;
+        return d.toLocaleString(undefined, {
+            year: "numeric",
+            month: "short",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+        });
+    };
+
     const renderCell = (item, column) => {
         const value = item[column.key];
 
@@ -51,6 +91,10 @@ export default function useList({
                     {isActive ? "Active" : "Inactive"}
                 </span>
             );
+        }
+
+        if (value && (column.key === "created_at" || column.key === "updated_at" || column.key.endsWith("_at"))) {
+            return formatDate(value);
         }
 
         return value ?? "-";
@@ -86,30 +130,55 @@ export default function useList({
                         </thead>
 
                         <tbody>
-                            {items.map((item, index) => (
-                                <tr key={index}>
-                                    <td>
-                                        <button
-                                            className="edit-btn"
-                                            onClick={() => onEdit?.(item)}
-                                        >
-                                            {print ? "" : <FiEdit2 size={16} />}
-                                            { print ? "Print" : "Edit" }
-                                        </button>
-                                        {generate && (
-                                            <button className="generate-btn" onClick={() => onGenerate?.(item)}>
-                                                Generate
-                                            </button>
-                                        )}
-                                    </td>
+                            {items.map((item, index) => {
+                                const generated = isGenerated ? isGenerated(item) : false;
 
-                                    {columns.map((column) => (
-                                        <td key={column.key}>
-                                            {renderCell(item, column)}
+                                return (
+                                    <tr key={index}>
+                                        <td>
+                                            <div className="action-buttons-group">
+                                                <button
+                                                    className="edit-btn"
+                                                    onClick={() => onEdit?.(item)}
+                                                >
+                                                    {print ? "" : <FiEdit2 size={16} />}
+                                                    { print ? "Print" : "Edit" }
+                                                </button>
+                                                {generate && (
+                                                    <button
+                                                        className={`generate-btn ${generated ? "disabled" : ""}`}
+                                                        onClick={() => {
+                                                            if (!generated) {
+                                                                onGenerate?.(item);
+                                                            }
+                                                        }}
+                                                        disabled={generated}
+                                                    >
+                                                        {generated ? "Generated" : "Generate"}
+                                                    </button>
+                                                )}
+                                                {deleteEndpoint && (
+                                                    <button
+                                                        className="delete-btn"
+                                                        title="Delete"
+                                                        onClick={() => handleDelete(item)}
+                                                        disabled={deletingId === resolveId(item)}
+                                                    >
+                                                        <FiTrash2 size={16} />
+                                                        {deletingId === resolveId(item) ? "..." : "Delete"}
+                                                    </button>
+                                                )}
+                                            </div>
                                         </td>
-                                    ))}
-                                </tr>
-                            ))}
+
+                                        {columns.map((column) => (
+                                            <td key={column.key}>
+                                                {renderCell(item, column)}
+                                            </td>
+                                        ))}
+                                    </tr>
+                                );
+                            })}
                         </tbody>
                     </table>
                 </div>

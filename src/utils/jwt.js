@@ -1,6 +1,3 @@
-/**
- * Safely extracts a JWT token string from any response payload shape.
- */
 export function extractToken(data) {
     if (!data) return null;
     if (typeof data === "string") return data.trim();
@@ -17,10 +14,6 @@ export function extractToken(data) {
     return null;
 }
 
-/**
- * Helper to safely decode a JWT token payload.
- * Extracts payload claims (id, username, exp, etc.) without external libraries.
- */
 export function parseJwt(token) {
     if (!token || typeof token !== "string") return null;
 
@@ -29,7 +22,6 @@ export function parseJwt(token) {
         if (parts.length !== 3) return null;
 
         const payload = parts[1];
-        // Replace base64url characters with base64 standard
         const base64 = payload.replace(/-/g, "+").replace(/_/g, "/");
         const jsonPayload = decodeURIComponent(
             window
@@ -46,9 +38,6 @@ export function parseJwt(token) {
     }
 }
 
-/**
- * Checks if a JWT token is expired.
- */
 export function isTokenExpired(token) {
     const parsed = parseJwt(token);
     if (!parsed || !parsed.exp) return false;

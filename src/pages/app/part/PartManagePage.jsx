@@ -6,9 +6,12 @@ import "../../../styles/form.css";
 
 import useAuthApi from "../../../api/useAuthApi";
 
+const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:6969";
+
 const defaultForm = {
     name: "",
     part_number: "",
+    total_quantity: 0,
     is_active: true
 };
 
@@ -40,6 +43,9 @@ export default function PartManagePage({ isEdit = false }) {
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
     const [errors, setErrors] = useState({});
+    const [imageFile, setImageFile] = useState(null);
+    const [imagePreview, setImagePreview] = useState(null);
+    const [existingImage, setExistingImage] = useState(null);
 
     useEffect(() => {
         if (!isEdit || !id) {
@@ -67,8 +73,10 @@ export default function PartManagePage({ isEdit = false }) {
                 setForm({
                     name: part.name || "",
                     part_number: part.part_number || "",
+                    total_quantity: part.total_quantity ?? 0,
                     is_active: parseActive(part.is_active)
                 });
+                setExistingImage(part.image_url || null);
             } finally {
                 if (isMounted)
                     setLoading(false);
@@ -80,7 +88,6 @@ export default function PartManagePage({ isEdit = false }) {
         return () => {
             isMounted = false;
         };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id, isEdit]);
 
     const updateField = (name, value) => {
@@ -88,6 +95,13 @@ export default function PartManagePage({ isEdit = false }) {
             ...prev,
             [name]: value
         }));
+    };
+
+    const onImageChange = (event) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+        setImageFile(file);
+        setImagePreview(URL.createObjectURL(file));
     };
 
     const validate = () => {
@@ -124,6 +138,7 @@ export default function PartManagePage({ isEdit = false }) {
         const payload = {
             name: form.name,
             part_number: form.part_number,
+            total_quantity: Number(form.total_quantity) || 0,
             is_active: form.is_active
         };
 
@@ -131,6 +146,13 @@ export default function PartManagePage({ isEdit = false }) {
             payload.part_id = Number(id);
 
         try {
+            if (imageFile) {
+                const fd = new FormData();
+                fd.append("image", imageFile);
+                const up = await callApi({ url: "/api/part/upload", method: "POST", body: fd });
+                if (up?.url) payload.image_url = up.url;
+            }
+
             const response = await callApi({
                 url: isEdit
                     ? `/api/part/update/${id}`
@@ -177,6 +199,18 @@ export default function PartManagePage({ isEdit = false }) {
                                 />
 
                                 <div className="form-group">
+                                    <label className="form-label">Total Number (stock)</label>
+                                    <input
+                                        className="form-input"
+                                        type="number"
+                                        min="0"
+                                        value={form.total_quantity}
+                                        onChange={(event) => updateField("total_quantity", event.target.value)}
+                                    />
+                                    <span className="form-error">{errors.total_quantity}</span>
+                                </div>
+
+                                <div className="form-group">
                                     <label className="form-label">
                                         Status
                                     </label>
@@ -191,6 +225,20 @@ export default function PartManagePage({ isEdit = false }) {
                                         />
                                         <span>{form.is_active ? "Active" : "Inactive"}</span>
                                     </label>
+                                </div>
+
+                                <div className="form-group col-4">
+                                    <label className="form-label">Image (optional)</label>
+                                    <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+                                        {(imagePreview || existingImage) && (
+                                            <img
+                                                src={imagePreview || `${API_BASE}${existingImage}`}
+                                                alt="Part"
+                                                style={{ width: 72, height: 72, objectFit: "cover", borderRadius: 10, border: "1px solid #e2e8f0" }}
+                                            />
+                                        )}
+                                        <input type="file" accept="image/*" onChange={onImageChange} />
+                                    </div>
                                 </div>
 
                                 <div className="form-footer col-4">

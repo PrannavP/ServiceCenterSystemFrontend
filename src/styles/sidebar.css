@@ -5,12 +5,12 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    background: #0f172a;
+    background: #18181b; /* Deep Onyx */
     color: #f8fafc;
     padding: 24px 18px;
     box-sizing: border-box;
     overflow-y: auto;
-    border-right: 1px solid #1e293b;
+    border-right: 1px solid #27272a;
 }
 
 .sidebar-top {
@@ -27,11 +27,11 @@
     font-weight: 700;
     color: #ffffff;
     padding-bottom: 12px;
-    border-bottom: 1px solid #1e293b;
+    border-bottom: 1px solid #27272a;
 }
 
 .logo-badge {
-    background: #2563eb;
+    background: #10b981; /* Vibrant Emerald */
     color: #ffffff;
     font-size: 13px;
     font-weight: 700;
@@ -59,15 +59,14 @@
 }
 
 .sidebar-nav a:hover {
-    background: #1e293b;
-    color: #ffffff;
+    background: rgba(255, 255, 255, 0.05);
+    color: #f8fafc;
 }
 
 .sidebar-nav a.active {
-    background: #2563eb;
+    background: #10b981;
     color: #ffffff;
     font-weight: 600;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
 }
 
 .sidebar-footer {
@@ -75,7 +74,7 @@
     flex-direction: column;
     gap: 16px;
     padding-top: 16px;
-    border-top: 1px solid #1e293b;
+    border-top: 1px solid #27272a;
 }
 
 .user-profile {
@@ -88,7 +87,7 @@
     width: 38px;
     height: 38px;
     border-radius: 50%;
-    background: #3b82f6;
+    background: #f59e0b; /* Vibrant Amber */
     color: #ffffff;
     display: flex;
     align-items: center;
@@ -114,15 +113,15 @@
 
 .user-role {
     font-size: 12px;
-    color: #64748b;
+    color: #94a3b8;
 }
 
 .logout-btn {
     width: 100%;
     padding: 10px;
-    background: rgba(239, 68, 68, 0.1);
-    color: #ef4444;
-    border: 1px solid rgba(239, 68, 68, 0.2);
+    background: transparent;
+    color: #f59e0b;
+    border: 1px solid #f59e0b;
     border-radius: 8px;
     font-weight: 600;
     cursor: pointer;
@@ -130,6 +129,6 @@
 }
 
 .logout-btn:hover {
-    background: #ef4444;
+    background: #f59e0b;
     color: #ffffff;
 }

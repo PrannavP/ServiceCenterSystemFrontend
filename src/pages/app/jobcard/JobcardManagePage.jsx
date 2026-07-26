@@ -6,6 +6,7 @@ import "../../../styles/form.css";
 
 import useAuthApi from "../../../api/useAuthApi";
 import { toast } from "react-toastify";
+import AddableSelect from "../../../components/AddableSelect/AddableSelect";
 
 const defaultForm = {
     customer_name: "",
@@ -22,19 +23,8 @@ const defaultForm = {
     detail: []
 };
 
-const vehicleTypes = [
-    {
-        label: "Car",
-        value: 1
-    }
-];
-
-const vehicles = [
-    {
-        label: "Toyota",
-        value: 2
-    }
-];
+const toOptions = (rows) =>
+    (rows || []).map((r) => ({ value: String(r.id), label: r.name ?? r.label }));
 
 const getResponseData = (res) => {
     if (res?.jobcard)
@@ -69,14 +59,15 @@ export default function JobcardManagePage({ isEdit = false }) {
     const [saving, setSaving] = useState(false);
     const [errors, setErrors] = useState({});
     const [partsDDL, setPartsDDL] = useState([]);
+    const [vehicleTypes, setVehicleTypes] = useState([]);
+    const [vehicles, setVehicles] = useState([]);
 
-    // call the loaddl api on page loads
     useEffect(() => {
-        loadDDlData()
+        loadDDlData();
+        loadVehicleData();
     }, []);
 
     const loadDDlData = async () => {
-        debugger
         const loadDDLRes = await callApi({
             url: '/api/jobcard/loadddl',
             method: "GET"
@@ -86,6 +77,54 @@ export default function JobcardManagePage({ isEdit = false }) {
             setPartsDDL(loadDDLRes);
         }
     }
+
+    const loadVehicleData = async () => {
+        const [types, models] = await Promise.all([
+            callApi({ url: "/api/static/vehicle-types", method: "GET" }),
+            callApi({ url: "/api/static/vehicles", method: "GET" }),
+        ]);
+        if (Array.isArray(types)) setVehicleTypes(toOptions(types));
+        if (Array.isArray(models)) setVehicles(toOptions(models));
+    };
+
+    const createVehicleType = async (name) => {
+        const res = await callApi({
+            url: "/api/static/vehicle-types",
+            method: "POST",
+            body: { name },
+            showToast: true,
+        });
+        if (!res) return null;
+        const option = { value: String(res.id), label: res.name };
+        setVehicleTypes((prev) => [...prev, option]);
+        return option;
+    };
+
+    const createVehicle = async (name) => {
+        const res = await callApi({
+            url: "/api/static/vehicles",
+            method: "POST",
+            body: { name, vehicle_type_id: form.static_vehicle_type_id || null },
+            showToast: true,
+        });
+        if (!res) return null;
+        const option = { value: String(res.id), label: res.name };
+        setVehicles((prev) => [...prev, option]);
+        return option;
+    };
+
+    const createPart = async (name) => {
+        const res = await callApi({
+            url: "/api/part/create",
+            method: "POST",
+            body: { name, part_number: `P-${Date.now()}`, is_active: true },
+            showToast: true,
+        });
+        if (!res) return null;
+        const option = { id: res.id, label: res.name || name, rate: 0, available_qty: 0 };
+        setPartsDDL((prev) => [...prev, option]);
+        return { value: String(res.id), label: option.label };
+    };
 
     useEffect(() => {
         if (!isEdit || !id) {
@@ -157,7 +196,6 @@ export default function JobcardManagePage({ isEdit = false }) {
         return () => {
             isMounted = false;
         };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id, isEdit]);
 
     const updateField = (name, value) => {
@@ -205,12 +243,13 @@ const updateDetail = (index, name, value) => {
                 [name]: value
             };
 
-            const quantity = Number(nextItem.quantity) || 0;
             const rate = Number(nextItem.rate) || 0;
 
-            if (name === "quantity" && quantity > Number(item.available_qty)){
-                toast.warn("Quantity cannot be greater than available quantity.");
-            };
+            // Cap quantity to the part's available stock.
+            if (name === "quantity" && Number(nextItem.quantity) > Number(item.available_qty)) {
+                toast.warn(`Only ${Number(item.available_qty)} in stock for this part.`);
+                nextItem.quantity = Number(item.available_qty);
+            }
 
             return {
                 ...nextItem,
@@ -367,78 +406,92 @@ const updateDetail = (index, name, value) => {
                         <div className="loading">Loading...</div>
                     ) : (
                         <form onSubmit={submit}>
-                            <div className="form-grid">
-                                <Input
-                                    label="Customer Name"
-                                    name="customer_name"
-                                    value={form.customer_name}
-                                    onChange={updateField}
-                                    error={errors.customer_name}
-                                />
+                            <div className="form-sections">
+                                <section className="jobcard-section">
+                                    <div className="section-header">
+                                        <h3>Customer Details</h3>
+                                    </div>
+                                    <div className="form-grid">
+                                        <Input
+                                            label="Customer Name"
+                                            name="customer_name"
+                                            value={form.customer_name}
+                                            onChange={updateField}
+                                            error={errors.customer_name}
+                                        />
 
-                                <Input
-                                    label="Customer Address"
-                                    name="customer_address"
-                                    value={form.customer_address}
-                                    onChange={updateField}
-                                />
+                                        <Input
+                                            label="Customer Address"
+                                            name="customer_address"
+                                            value={form.customer_address}
+                                            onChange={updateField}
+                                        />
 
-                                <Input
-                                    label="Contact"
-                                    name="contact_number"
-                                    value={form.contact_number}
-                                    onChange={updateField}
-                                    error={errors.contact_number}
-                                />
+                                        <Input
+                                            label="Contact"
+                                            name="contact_number"
+                                            value={form.contact_number}
+                                            onChange={updateField}
+                                            error={errors.contact_number}
+                                        />
+                                    </div>
+                                </section>
 
-                                <Input
-                                    label="Vehicle No"
-                                    name="vehicle_registration_number"
-                                    value={form.vehicle_registration_number}
-                                    onChange={updateField}
-                                    error={errors.vehicle_registration_number}
-                                />
+                                <section className="jobcard-section">
+                                    <div className="section-header">
+                                        <h3>Vehicle Details</h3>
+                                    </div>
+                                    <div className="form-grid">
+                                        <Input
+                                            label="Vehicle No"
+                                            name="vehicle_registration_number"
+                                            value={form.vehicle_registration_number}
+                                            onChange={updateField}
+                                            error={errors.vehicle_registration_number}
+                                        />
 
-                                <Input
-                                    label="Odometer"
-                                    name="odometer_reading"
-                                    value={form.odometer_reading}
-                                    onChange={updateField}
-                                />
+                                        <AddableSelect
+                                            label="Vehicle Type"
+                                            value={form.static_vehicle_type_id}
+                                            options={vehicleTypes}
+                                            onChange={(value) => updateField("static_vehicle_type_id", value)}
+                                            onCreate={createVehicleType}
+                                            error={errors.static_vehicle_type_id}
+                                        />
 
-                                <Input
-                                    label="Fuel Quantity"
-                                    name="fuel_quantity"
-                                    value={form.fuel_quantity}
-                                    onChange={updateField}
-                                />
+                                        <AddableSelect
+                                            label="Vehicle"
+                                            value={form.static_vehicle_id}
+                                            options={vehicles}
+                                            onChange={(value) => updateField("static_vehicle_id", value)}
+                                            onCreate={createVehicle}
+                                            error={errors.static_vehicle_id}
+                                        />
 
-                                <Input
-                                    label="Chasis Number"
-                                    name="chasis_number"
-                                    value={form.chasis_number}
-                                    onChange={updateField}
-                                />
+                                        <Input
+                                            label="Odometer"
+                                            name="odometer_reading"
+                                            value={form.odometer_reading}
+                                            onChange={updateField}
+                                        />
 
-                                <SelectInput
-                                    label="Vehicle Type"
-                                    name="static_vehicle_type_id"
-                                    value={form.static_vehicle_type_id}
-                                    options={vehicleTypes}
-                                    onChange={updateField}
-                                    error={errors.static_vehicle_type_id}
-                                />
+                                        <Input
+                                            label="Fuel Quantity"
+                                            name="fuel_quantity"
+                                            value={form.fuel_quantity}
+                                            onChange={updateField}
+                                        />
 
-                                <SelectInput
-                                    label="Vehicle"
-                                    name="static_vehicle_id"
-                                    value={form.static_vehicle_id}
-                                    options={vehicles}
-                                    onChange={updateField}
-                                    error={errors.static_vehicle_id}
-                                />
+                                        <Input
+                                            label="Chasis Number"
+                                            name="chasis_number"
+                                            value={form.chasis_number}
+                                            onChange={updateField}
+                                        />
+                                    </div>
+                                </section>
 
-                                <div className="jobcard-section col-4">
+                                <section className="jobcard-section">
                                     <div className="section-header">
                                         <h3>Problems</h3>
 
@@ -480,11 +533,11 @@ const updateDetail = (index, name, value) => {
                                     <span className="form-error">
                                         {errors.problems}
                                     </span>
-                                </div>
+                                </section>
 
-                                <div className="jobcard-section col-4">
+                                <section className="jobcard-section">
                                     <div className="section-header">
-                                        <h3>Parts</h3>
+                                        <h3>Parts &amp; Labour</h3>
 
                                         <button
                                             type="button"
@@ -512,25 +565,15 @@ const updateDetail = (index, name, value) => {
                                                 {form.detail.map((item, index) => (
                                                     <tr key={index}>
                                                         <td>
-                                                            <select
-                                                                className="form-input"
+                                                            <AddableSelect
+                                                                bare
+                                                                placeholder="Select part"
+                                                                label="part"
                                                                 value={item.part_id}
-                                                                onChange={(event) =>
-                                                                    updatePart(index, event.target.value)
-                                                                }
-                                                            >
-                                                                <option value="">
-                                                                    Select part
-                                                                </option>
-                                                                    {partsDDL.map((option) => (
-                                                                        <option
-                                                                            key={option.id}
-                                                                            value={option.id}
-                                                                        >
-                                                                            {option.label}
-                                                                        </option>
-                                                                    ))}
-                                                            </select>
+                                                                options={partsDDL.map((o) => ({ value: String(o.id), label: o.label }))}
+                                                                onChange={(value) => updatePart(index, value)}
+                                                                onCreate={createPart}
+                                                            />
                                                             <span className="form-error">
                                                                 {errors[`detail_${index}_part_id`]}
                                                             </span>
@@ -609,7 +652,7 @@ const updateDetail = (index, name, value) => {
                                                     <tr>
                                                         <td
                                                             className="detail-empty"
-                                                            colSpan="5"
+                                                            colSpan="6"
                                                         >
                                                             No parts added.
                                                         </td>
@@ -622,23 +665,23 @@ const updateDetail = (index, name, value) => {
                                     <span className="form-error">
                                         {errors.detail}
                                     </span>
-                                </div>
+                                </section>
 
-                                <div className="form-group col-4">
-                                    <label className="form-label">
-                                        Remarks
-                                    </label>
-
+                                <section className="jobcard-section">
+                                    <div className="section-header">
+                                        <h3>Remarks</h3>
+                                    </div>
                                     <textarea
                                         className="form-input"
                                         value={form.remarks}
+                                        placeholder="Any additional notes for this job card"
                                         onChange={(event) =>
                                             updateField("remarks", event.target.value)
                                         }
                                     />
-                                </div>
+                                </section>
 
-                                <div className="form-footer col-4">
+                                <div className="form-footer">
                                     <button
                                         type="button"
                                         className="btn btn-secondary"

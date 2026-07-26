@@ -9,10 +9,13 @@ const JobcardListPage = () => {
     const navigate = useNavigate();
     const { callApi } = useAuthApi();
 
-    const { List } = useList({
+    const { List, refresh } = useList({
         generate: true,
         title: "Job Cards",
         endpoint: "/api/jobcard/list",
+        deleteEndpoint: "/api/jobcard/delete",
+        getId: (item) => item.jobcard_number ?? item.jobcard_id,
+        deleteLabel: "this job card",
         headerAction: (
             <button
                 type="button"
@@ -28,15 +31,24 @@ const JobcardListPage = () => {
             navigate(`/app/jobcard/manage/${item.jobcard_id || item.jobcard_number}`);
         },
 
-        onGenerate: (item) => {
-            const res = callApi({
+        isGenerated: (item) => {
+            return item.is_billed === true || item.is_billed === 1 || item.status === 'COMPLETED';
+        },
+
+        onGenerate: async (item) => {
+            const res = await callApi({
                 url: '/api/billing/create',
                 method: 'POST',
                 body: {
                     jobcard_id: item.jobcard_id || item.jobcard_number,
                     payment_method: "CASH"
-                }
-            })
+                },
+                showToast: true
+            });
+            if (res) {
+                toast.success("Bill generated successfully.");
+                refresh();
+            }
         },
 
         columns: [
