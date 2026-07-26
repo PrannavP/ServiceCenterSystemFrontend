@@ -1,0 +1,40 @@
+.addable-inline {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.addable-inline .form-input {
+    flex: 1;
+}
+
+.addable-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    color: #fff;
+    transition: transform 0.15s ease, opacity 0.2s ease;
+}
+
+.addable-btn:hover {
+    transform: translateY(-1px);
+}
+
+.addable-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.addable-save {
+    background: #10b981;
+}
+
+.addable-cancel {
+    background: #ef4444;
+}

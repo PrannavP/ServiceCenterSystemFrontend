@@ -23,7 +23,6 @@ const WELCOME = {
     actions: [],
 };
 
-// Minimal, safe markdown-lite: **bold** and bullet lines. No raw HTML injection.
 function renderText(text) {
     return String(text)
         .split("\n")
@@ -124,14 +123,12 @@ export default function ChatWidget() {
         } catch (_) {}
     }, [messages]);
 
-    // Scroll to newest
     useEffect(() => {
         if (open && bodyRef.current) {
             bodyRef.current.scrollTop = bodyRef.current.scrollHeight;
         }
     }, [messages, busy, open]);
 
-    // Entrance animation
     useEffect(() => {
         if (open && panelRef.current) {
             gsap.fromTo(

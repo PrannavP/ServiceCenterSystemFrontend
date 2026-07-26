@@ -5,6 +5,7 @@ import { FiPlus, FiSave, FiTrash2, FiX } from "react-icons/fi";
 import "../../../styles/form.css";
 
 import useAuthApi from "../../../api/useAuthApi";
+import { toast } from "react-toastify";
 
 const defaultForm = {
     remarks: "",
@@ -51,13 +52,11 @@ export default function ReceiptManagePage({ isEdit = false }) {
     const [errors, setErrors] = useState({});
     const [partsDDL, setPartsDDL] = useState([]);
 
-    // call the loaddl api on page loads
     useEffect(() => {
         loadDDlData()
     }, []);
 
     const loadDDlData = async () => {
-        debugger
         const loadDDLRes = await callApi({
             url: '/api/receipt/loadddl',
             method: "GET"
@@ -143,6 +142,23 @@ export default function ReceiptManagePage({ isEdit = false }) {
                     ...item,
                     [name]: value
                 };
+
+                // When a part is picked, remember its stock so quantity can be capped.
+                if (name === "part_id") {
+                    const selected = partsDDL.find((p) => String(p.id) === String(value));
+                    nextItem.max_quantity = selected?.total_quantity ?? null;
+                    if (nextItem.max_quantity != null && Number(nextItem.quantity) > nextItem.max_quantity) {
+                        nextItem.quantity = nextItem.max_quantity;
+                    }
+                }
+
+                // Cap the quantity to the part's available stock.
+                if (name === "quantity" && item.max_quantity != null) {
+                    if ((Number(value) || 0) > item.max_quantity) {
+                        toast.warn(`Only ${item.max_quantity} in stock for this part.`);
+                        nextItem.quantity = item.max_quantity;
+                    }
+                }
 
                 const quantity = Number(nextItem.quantity) || 0;
                 const rate = Number(nextItem.rate) || 0;
@@ -356,6 +372,7 @@ export default function ReceiptManagePage({ isEdit = false }) {
                                                                 className="form-input"
                                                                 type="number"
                                                                 min="1"
+                                                                max={item.max_quantity ?? undefined}
                                                                 value={item.quantity}
                                                                 onChange={(event) =>
                                                                     updateDetail(
@@ -368,6 +385,9 @@ export default function ReceiptManagePage({ isEdit = false }) {
                                                             <span className="form-error">
                                                                 {errors[`detail_${index}_quantity`]}
                                                             </span>
+                                                            {item.max_quantity != null && (
+                                                                <span className="form-hint">In stock: {item.max_quantity}</span>
+                                                            )}
                                                         </td>
 
                                                         <td>

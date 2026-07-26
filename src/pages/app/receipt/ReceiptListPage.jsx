@@ -9,6 +9,9 @@ const ReceiptListPage = () => {
     const { List } = useList({
         title: "Receipts",
         endpoint: "/api/receipt/list",
+        deleteEndpoint: "/api/receipt/delete",
+        getId: (item) => item.id ?? item.receipt_id,
+        deleteLabel: "this receipt",
         headerAction: (
             <button
                 type="button"

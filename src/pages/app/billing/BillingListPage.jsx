@@ -1,27 +1,17 @@
-import { useNavigate } from "react-router-dom";
-import { FiPlus } from "react-icons/fi";
 import useList from "../../../hooks/useList";
 import '../../../styles/listpage.css';
 import useAuthApi from "../../../api/useAuthApi";
 
 const BillListPage = () => {
-    const navigate = useNavigate();
     const { callApi } = useAuthApi();
 
     const { List } = useList({
         print: true,
-        title: "Job Cards",
+        title: "Bills",
         endpoint: "/api/billing/list",
-        headerAction: (
-            <button
-                type="button"
-                className="list-create-btn"
-                onClick={() => navigate("/app/billing/manage")}
-            >
-                <FiPlus size={16} />
-                Create
-            </button>
-        ),
+        deleteEndpoint: "/api/billing/delete",
+        getId: (item) => item.bill_id ?? item.id,
+        deleteLabel: "this bill",
 
 onEdit: async (item) => {
     const html = await callApi({
@@ -42,7 +32,6 @@ onEdit: async (item) => {
     printWindow.document.write(html);
     printWindow.document.close();
 
-    // Wait until everything is loaded before printing
     printWindow.onload = () => {
         printWindow.focus();
         printWindow.print();

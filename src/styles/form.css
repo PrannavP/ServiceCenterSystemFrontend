@@ -22,26 +22,42 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 24px 32px;
-    border-bottom: 1px solid #f1f5f9;
-    background: #ffffff;
+    padding: 22px 32px;
+    border-bottom: 1px solid #eef2f7;
+    background: linear-gradient(135deg, #ecfdf5 0%, #ffffff 60%);
 }
 
 .form-card-header h2 {
     margin: 0;
     font-size: 24px;
-    font-weight: 700;
-    color: #18181b;
+    font-weight: 800;
+    color: #0f172a;
     letter-spacing: -0.02em;
+    padding-left: 14px;
+    border-left: 4px solid #10b981;
 }
 
 .form-card-body {
     padding: 32px;
 }
 
+.form-hint {
+    display: block;
+    margin-top: 4px;
+    font-size: 11px;
+    color: #64748b;
+}
+
 /* ===========================
    Grid
 =========================== */
+
+/* Vertical stack of titled sections (Customer / Vehicle / Problems / Parts). */
+.form-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
 
 .form-grid {
     display: grid;
@@ -298,9 +314,11 @@
 
 .section-header h3 {
     margin: 0;
-    color: #111827;
+    color: #0f172a;
     font-size: 16px;
-    font-weight: 650;
+    font-weight: 700;
+    padding-left: 10px;
+    border-left: 3px solid #10b981;
 }
 
 .problem-list {

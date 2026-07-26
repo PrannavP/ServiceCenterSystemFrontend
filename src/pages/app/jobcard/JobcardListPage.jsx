@@ -9,10 +9,13 @@ const JobcardListPage = () => {
     const navigate = useNavigate();
     const { callApi } = useAuthApi();
 
-    const { List } = useList({
+    const { List, refresh } = useList({
         generate: true,
         title: "Job Cards",
         endpoint: "/api/jobcard/list",
+        deleteEndpoint: "/api/jobcard/delete",
+        getId: (item) => item.jobcard_number ?? item.jobcard_id,
+        deleteLabel: "this job card",
         headerAction: (
             <button
                 type="button"
@@ -29,7 +32,6 @@ const JobcardListPage = () => {
         },
 
         isGenerated: (item) => {
-            // Check API fields that indicate the job card is already billed
             return item.is_billed === true || item.is_billed === 1 || item.status === 'COMPLETED';
         },
 
@@ -44,8 +46,8 @@ const JobcardListPage = () => {
                 showToast: true
             });
             if (res) {
-                // If successful, reload the page to refresh the data
-                window.location.reload();
+                toast.success("Bill generated successfully.");
+                refresh();
             }
         },
 

@@ -4,19 +4,23 @@ import "../../styles/sidebar.css";
 import useAuthApi from "../../api/useAuthApi";
 import { useAuth } from "../../context/AuthContext";
 import { MdAssignment, MdDashboard, MdDescription, MdInventory2, MdReceiptLong } from "react-icons/md";
+import { FiChevronLeft, FiChevronRight, FiMoon, FiSun } from "react-icons/fi";
+import { getTheme, toggleTheme } from "../../utils/theme";
 
 const iconMap = {
     dashboard: MdDashboard,
     bill: MdReceiptLong,
-    receipt: MdDescription,   // Receipt/document
-    card: MdAssignment,       // Job Card
-    parts: MdInventory2,       // Parts/Inventory
+    receipt: MdDescription,
+    card: MdAssignment,
+    parts: MdInventory2,
 };
 
 export default function Sidebar() {
     const { callApi } = useAuthApi();
     const { user, logout } = useAuth();
     const [menus, setMenus] = useState([]);
+    const [collapsed, setCollapsed] = useState(() => localStorage.getItem("sidebar.collapsed") === "1");
+    const [theme, setTheme] = useState(getTheme());
 
     useEffect(() => {
         const fetchMenus = async () => {
@@ -26,7 +30,7 @@ export default function Sidebar() {
                 const response = await callApi({
                     url: `/api/menu/getmenu/${userId}`,
                     method: "GET",
-                    skipAuthRedirect: true, // Prevent menu fetch failures from destroying login session
+                    skipAuthRedirect: true,
                 });
 
                 if (Array.isArray(response) && response.length > 0) {
@@ -44,12 +48,30 @@ export default function Sidebar() {
         fetchMenus();
     }, [user]);
 
+    const toggleCollapsed = () => {
+        setCollapsed((prev) => {
+            const next = !prev;
+            localStorage.setItem("sidebar.collapsed", next ? "1" : "0");
+            return next;
+        });
+    };
+
+    const onToggleTheme = () => setTheme(toggleTheme());
+
     return (
-        <aside className="sidebar">
+        <aside className={`sidebar ${collapsed ? "collapsed" : ""}`}>
             <div className="sidebar-top">
                 <div className="sidebar-logo">
                     <span className="logo-badge">AP</span>
-                    <span>Admin Panel</span>
+                    {!collapsed && <span>Admin Panel</span>}
+                    <button
+                        className="sidebar-collapse-btn"
+                        onClick={toggleCollapsed}
+                        title={collapsed ? "Expand" : "Collapse"}
+                        style={{ marginLeft: "auto" }}
+                    >
+                        {collapsed ? <FiChevronRight size={18} /> : <FiChevronLeft size={18} />}
+                    </button>
                 </div>
 
                 <nav className="sidebar-nav">
@@ -60,6 +82,7 @@ export default function Sidebar() {
                             <NavLink
                                 key={menu.id || menu.path}
                                 to={menu.path}
+                                title={menu.name}
                                 className={({ isActive }) => (isActive ? "active" : "")}
                             >
                                 {Icon && (
@@ -67,7 +90,7 @@ export default function Sidebar() {
                                         <Icon size={20} />
                                     </span>
                                 )}
-                                <span>{menu.name}</span>
+                                {!collapsed && <span>{menu.name}</span>}
                             </NavLink>
                         );
                     })}
@@ -75,7 +98,12 @@ export default function Sidebar() {
             </div>
 
             <div className="sidebar-footer">
-                {user && (
+                <button className="sidebar-theme-btn" onClick={onToggleTheme} title="Toggle theme">
+                    {theme === "dark" ? <FiSun size={16} /> : <FiMoon size={16} />}
+                    {!collapsed && <span>{theme === "dark" ? "Light mode" : "Dark mode"}</span>}
+                </button>
+
+                {user && !collapsed && (
                     <div className="user-profile">
                         <div className="avatar">
                             {(user.username || "U")[0].toUpperCase()}
@@ -87,7 +115,7 @@ export default function Sidebar() {
                     </div>
                 )}
                 <button className="logout-btn" onClick={logout} title="Sign Out">
-                    Logout
+                    {collapsed ? "⎋" : "Logout"}
                 </button>
             </div>
         </aside>

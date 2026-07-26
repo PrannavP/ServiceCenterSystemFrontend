@@ -12,14 +12,12 @@ export default function Landing() {
     const featuresRef = useRef(null);
 
     useEffect(() => {
-        // Hero Animations
         const heroElements = heroRef.current.querySelectorAll('.hero-anim');
         gsap.fromTo(heroElements, 
             { y: 50, opacity: 0 }, 
             { y: 0, opacity: 1, duration: 0.8, stagger: 0.2, ease: "power3.out", delay: 0.2 }
         );
 
-        // Features Scroll Animations
         const featureCards = featuresRef.current.querySelectorAll('.feature-card');
         gsap.fromTo(featureCards,
             { y: 60, opacity: 0 },

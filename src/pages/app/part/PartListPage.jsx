@@ -9,6 +9,9 @@ const PartListPage = () => {
     const { List } = useList({
         title: "Parts",
         endpoint: "/api/part/list",
+        deleteEndpoint: "/api/part/delete",
+        getId: (item) => item.id ?? item.part_id,
+        deleteLabel: "this part",
         headerAction: (
             <button
                 type="button"
@@ -30,6 +33,10 @@ const PartListPage = () => {
             {
                 key: "part_number",
                 label: "Part Number"
+            },
+            {
+                key: "total_quantity",
+                label: "Total Number"
             },
             {
                 key: "is_active",
