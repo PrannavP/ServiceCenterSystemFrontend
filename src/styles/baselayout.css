@@ -1,23 +1,22 @@
 .base-layout {
     display: flex;
-    width: 100vw;
-    height: 100vh;
-    max-width: 100vw;
-    max-height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     overflow: hidden;
-    box-sizing: border-box;
-    background: #f8fafc;
+    background: #f8fafc; /* Crisp slate 50 */
 }
 
 .base-content {
     flex: 1;
     min-width: 0;
     min-height: 0;
-    height: 100vh;
-    max-height: 100vh;
+    height: 100%;
     overflow-y: auto;
-    overflow-x: auto;
-    padding: 28px;
+    overflow-x: hidden;
+    padding: 2rem;
     box-sizing: border-box;
     background: #f8fafc;
     scrollbar-width: none;

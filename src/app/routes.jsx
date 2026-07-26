@@ -6,7 +6,7 @@ import PublicRoute from "../guards/PublicRoutes";
 
 import Login from "../pages/auth/Login";
 import ForgotPassword from "../pages/auth/ForgotPassword";
-
+import Landing from "../pages/Landing";
 import Dashboard from "../pages/dashboard/Dashboard";
 
 import NotFound from "../pages/NotFound";
@@ -91,6 +91,14 @@ export const routes = [
         ],
     },
 
+    {
+        path: "/",
+        element: (
+            <PublicRoute>
+                <Landing />
+            </PublicRoute>
+        ),
+    },
     {
         path: "*",
         element: <NotFound />,

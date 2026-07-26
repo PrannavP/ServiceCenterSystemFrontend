@@ -1,5 +1,6 @@
 import { Outlet } from "react-router-dom";
 import Sidebar from "../components/SideBar/SideBar";
+import ChatWidget from "../components/Chatbot/ChatWidget";
 import "../styles/baselayout.css";
 
 export default function BaseLayout() {
@@ -9,6 +10,7 @@ export default function BaseLayout() {
             <main className="base-content">
                 <Outlet />
             </main>
+            <ChatWidget />
         </div>
     );
 }

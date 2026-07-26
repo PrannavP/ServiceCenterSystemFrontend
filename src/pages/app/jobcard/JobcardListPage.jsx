@@ -28,15 +28,25 @@ const JobcardListPage = () => {
             navigate(`/app/jobcard/manage/${item.jobcard_id || item.jobcard_number}`);
         },
 
-        onGenerate: (item) => {
-            const res = callApi({
+        isGenerated: (item) => {
+            // Check API fields that indicate the job card is already billed
+            return item.is_billed === true || item.is_billed === 1 || item.status === 'COMPLETED';
+        },
+
+        onGenerate: async (item) => {
+            const res = await callApi({
                 url: '/api/billing/create',
                 method: 'POST',
                 body: {
                     jobcard_id: item.jobcard_id || item.jobcard_number,
                     payment_method: "CASH"
-                }
-            })
+                },
+                showToast: true
+            });
+            if (res) {
+                // If successful, reload the page to refresh the data
+                window.location.reload();
+            }
         },
 
         columns: [

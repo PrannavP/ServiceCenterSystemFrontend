@@ -8,6 +8,7 @@ export default function useList({
     columns = [],
     onEdit,
     onGenerate,
+    isGenerated,
     print = false,
     generate = false,
     headerAction
@@ -86,30 +87,44 @@ export default function useList({
                         </thead>
 
                         <tbody>
-                            {items.map((item, index) => (
-                                <tr key={index}>
-                                    <td>
-                                        <button
-                                            className="edit-btn"
-                                            onClick={() => onEdit?.(item)}
-                                        >
-                                            {print ? "" : <FiEdit2 size={16} />}
-                                            { print ? "Print" : "Edit" }
-                                        </button>
-                                        {generate && (
-                                            <button className="generate-btn" onClick={() => onGenerate?.(item)}>
-                                                Generate
-                                            </button>
-                                        )}
-                                    </td>
+                            {items.map((item, index) => {
+                                const generated = isGenerated ? isGenerated(item) : false;
 
-                                    {columns.map((column) => (
-                                        <td key={column.key}>
-                                            {renderCell(item, column)}
+                                return (
+                                    <tr key={index}>
+                                        <td>
+                                            <div className="action-buttons-group">
+                                                <button
+                                                    className="edit-btn"
+                                                    onClick={() => onEdit?.(item)}
+                                                >
+                                                    {print ? "" : <FiEdit2 size={16} />}
+                                                    { print ? "Print" : "Edit" }
+                                                </button>
+                                                {generate && (
+                                                    <button 
+                                                        className={`generate-btn ${generated ? "disabled" : ""}`} 
+                                                        onClick={() => {
+                                                            if (!generated) {
+                                                                onGenerate?.(item);
+                                                            }
+                                                        }}
+                                                        disabled={generated}
+                                                    >
+                                                        {generated ? "Generated" : "Generate"}
+                                                    </button>
+                                                )}
+                                            </div>
                                         </td>
-                                    ))}
-                                </tr>
-                            ))}
+
+                                        {columns.map((column) => (
+                                            <td key={column.key}>
+                                                {renderCell(item, column)}
+                                            </td>
+                                        ))}
+                                    </tr>
+                                );
+                            })}
                         </tbody>
                     </table>
                 </div>

@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import useLogin from "../../api/useLogin";
+import { FiUser, FiLock, FiArrowRight } from "react-icons/fi";
 import "../../styles/login.css";
 
 export default function Login() {
@@ -25,45 +26,53 @@ export default function Login() {
         setLoading(false);
 
         if (result) {
-            navigate("/", { replace: true });
+            navigate("/dashboard", { replace: true });
         }
     };
 
     return (
-        <div className="login-page">
-            <div className="login-left">
-                <form className="login-card" onSubmit={handleLogin}>
-                    <h1>Welcome Back</h1>
-
-                    <p className="subtitle">Sign in to continue</p>
-
-                    <div className="input-group">
-                        <label>Username</label>
-                        <input
-                            type="text"
-                            placeholder="Enter your username"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            required
-                        />
-                    </div>
-
-                    <div className="input-group">
-                        <label>Password</label>
-                        <input
-                            type="password"
-                            placeholder="Enter your password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                        />
-                    </div>
-
-                    <button className="login-btn" type="submit" disabled={loading}>
-                        {loading ? "Signing In..." : "Sign In"}
-                    </button>
-                </form>
+        <form className="login-card" onSubmit={handleLogin}>
+            <div className="login-header">
+                <h1>Welcome Back</h1>
+                <p className="subtitle">Sign in to continue to your dashboard.</p>
             </div>
-        </div>
+
+            <div className="input-group">
+                <label>Username</label>
+                <div className="input-wrapper">
+                    <FiUser className="input-icon" size={18} />
+                    <input
+                        type="text"
+                        placeholder="Enter your username"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        required
+                    />
+                </div>
+            </div>
+
+            <div className="input-group">
+                <label>Password</label>
+                <div className="input-wrapper">
+                    <FiLock className="input-icon" size={18} />
+                    <input
+                        type="password"
+                        placeholder="Enter your password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                    />
+                </div>
+            </div>
+
+            <div className="forgot-password-link">
+                <Link to="/forgot-password">Forgot password?</Link>
+            </div>
+
+            <button className="login-btn" type="submit" disabled={loading}>
+                {loading ? "Signing In..." : "Sign In"}
+                {!loading && <FiArrowRight size={18} />}
+            </button>
+        </form>
     );
 }
