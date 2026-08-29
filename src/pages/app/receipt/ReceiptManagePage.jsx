@@ -233,7 +233,7 @@ export default function ReceiptManagePage({ isEdit = false }) {
             remarks: form.remarks,
             number: form.number,
             is_active: form.is_active,
-            details: form.detail.map((item) => ({
+            detail: form.detail.map((item) => ({
                 part_id: Number(item.part_id),
                 quantity: Number(item.quantity),
                 rate: Number(item.rate),

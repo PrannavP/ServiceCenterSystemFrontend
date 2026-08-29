@@ -11,7 +11,6 @@ const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:6969";
 const defaultForm = {
     name: "",
     part_number: "",
-    total_quantity: 0,
     is_active: true
 };
 
@@ -73,7 +72,6 @@ export default function PartManagePage({ isEdit = false }) {
                 setForm({
                     name: part.name || "",
                     part_number: part.part_number || "",
-                    total_quantity: part.total_quantity ?? 0,
                     is_active: parseActive(part.is_active)
                 });
                 setExistingImage(part.image_url || null);
@@ -138,7 +136,6 @@ export default function PartManagePage({ isEdit = false }) {
         const payload = {
             name: form.name,
             part_number: form.part_number,
-            total_quantity: Number(form.total_quantity) || 0,
             is_active: form.is_active
         };
 
@@ -199,18 +196,6 @@ export default function PartManagePage({ isEdit = false }) {
                                 />
 
                                 <div className="form-group">
-                                    <label className="form-label">Total Number (stock)</label>
-                                    <input
-                                        className="form-input"
-                                        type="number"
-                                        min="0"
-                                        value={form.total_quantity}
-                                        onChange={(event) => updateField("total_quantity", event.target.value)}
-                                    />
-                                    <span className="form-error">{errors.total_quantity}</span>
-                                </div>
-
-                                <div className="form-group">
                                     <label className="form-label">
                                         Status
                                     </label>
@@ -227,7 +212,8 @@ export default function PartManagePage({ isEdit = false }) {
                                     </label>
                                 </div>
 
-                                <div className="form-group col-4">
+                                {/* Commented this image upload field part because its not needed as of now. Prannav Panta */}
+                                {/* <div className="form-group col-4">
                                     <label className="form-label">Image (optional)</label>
                                     <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
                                         {(imagePreview || existingImage) && (
@@ -239,7 +225,7 @@ export default function PartManagePage({ isEdit = false }) {
                                         )}
                                         <input type="file" accept="image/*" onChange={onImageChange} />
                                     </div>
-                                </div>
+                                </div> */}
 
                                 <div className="form-footer col-4">
                                     <button
