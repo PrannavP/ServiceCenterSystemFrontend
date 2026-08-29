@@ -109,8 +109,8 @@ export default function Sidebar() {
                             {(user.username || "U")[0].toUpperCase()}
                         </div>
                         <div className="user-info">
-                            <div className="user-name">{user.username || "User"}</div>
-                            <div className="user-role">{user.role || "Administrator"}</div>
+                            <div className="user-name">{user.username.toUpperCase() || "User"}</div>
+                            {/* <div className="user-role">{user.role || "Administrator"}</div> */}
                         </div>
                     </div>
                 )}

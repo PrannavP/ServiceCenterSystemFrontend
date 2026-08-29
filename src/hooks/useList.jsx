@@ -59,7 +59,6 @@ export default function useList({
         setDeletingId(null);
 
         if (res !== null) {
-            toast.success("Deleted successfully.");
             fetchList();
         }
     };

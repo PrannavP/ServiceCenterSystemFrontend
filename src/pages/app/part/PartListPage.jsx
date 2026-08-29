@@ -35,10 +35,6 @@ const PartListPage = () => {
                 label: "Part Number"
             },
             {
-                key: "total_quantity",
-                label: "Total Number"
-            },
-            {
                 key: "is_active",
                 label: "Active"
             }
