@@ -15,7 +15,11 @@ export default function useList({
     headerAction,
     deleteEndpoint,
     getId,
-    deleteLabel = "this item"
+    deleteLabel = "this item",
+    // added this for jjob card settlement
+    isSettled = false,
+    onSettle,
+    settle
 }) {
     const { callApi } = useAuthApi();
     const [deletingId, setDeletingId] = useState(null);
@@ -92,6 +96,14 @@ export default function useList({
             );
         }
 
+        if (column.key === "is_settled") {
+            return (
+                <span className={`status-badge ${value ? "settled" : "unsettled"}`}>
+                    {value ? "Settled" : "Not Settled"}
+                </span>
+            );
+        }
+
         if (value && (column.key === "created_at" || column.key === "updated_at" || column.key.endsWith("_at"))) {
             return formatDate(value);
         }
@@ -131,6 +143,8 @@ export default function useList({
                         <tbody>
                             {items.map((item, index) => {
                                 const generated = isGenerated ? isGenerated(item) : false;
+                                const settled = isSettled ? isSettled(item) : false;
+                                console.log(settled)
 
                                 return (
                                     <tr key={index}>
@@ -143,7 +157,8 @@ export default function useList({
                                                     {print ? "" : <FiEdit2 size={16} />}
                                                     { print ? "Print" : "Edit" }
                                                 </button>
-                                                {generate && (
+                                                
+                                                {generate && settled && (
                                                     <button
                                                         className={`generate-btn ${generated ? "disabled" : ""}`}
                                                         onClick={() => {
@@ -156,6 +171,16 @@ export default function useList({
                                                         {generated ? "Generated" : "Generate"}
                                                     </button>
                                                 )}
+
+                                                {settle && !settled && (
+                                                    <button
+                                                        className={`settle-btn ${settled ? "disabled" : ""}`}
+                                                        onClick={() => onSettle?.(item)}
+                                                    >
+                                                        Settle
+                                                    </button>
+                                                )}
+
                                                 {deleteEndpoint && (
                                                     <button
                                                         className="delete-btn"

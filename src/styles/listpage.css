@@ -181,6 +181,32 @@
     transform: none;
 }
 
+.settle-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #3bca17; /* Vibrant Crimson */
+    color: white;
+    border: none;
+    padding: 7px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: .2s;
+}
+
+.settle-btn:hover:not(.disabled) {
+    background: #33dc04;
+}
+
+.settle-btn.disabled {
+    background: #e5e7eb;
+    color: #9ca3af;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
 .delete-btn {
     display: inline-flex;
     align-items: center;
