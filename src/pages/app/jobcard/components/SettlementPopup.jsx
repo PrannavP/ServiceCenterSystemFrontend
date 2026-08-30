@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import useAuthApi from "../../../../api/useAuthApi";
-import "../../../../styles/Settlementpopup.css";
+import "../../../../styles/settlementpopup.css";
 
 // ---------------------------------------------------------------------------
 // Luhn Algorithm — Credit / Debit Card Number Validation
