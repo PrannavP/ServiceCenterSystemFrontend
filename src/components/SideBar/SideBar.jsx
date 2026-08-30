@@ -63,7 +63,7 @@ export default function Sidebar() {
             <div className="sidebar-top">
                 <div className="sidebar-logo">
                     <span className="logo-badge">AP</span>
-                    {!collapsed && <span>Admin Panel</span>}
+                    {!collapsed && <span>ServiceCenter</span>}
                     <button
                         className="sidebar-collapse-btn"
                         onClick={toggleCollapsed}
