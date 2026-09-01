@@ -5,7 +5,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    background: #18181b; /* Deep Onyx */
+    background: #18181b; 
     color: #f8fafc;
     padding: 24px 18px;
     box-sizing: border-box;
@@ -31,7 +31,7 @@
 }
 
 .logo-badge {
-    background: #10b981; /* Vibrant Emerald */
+    background: #10b981; 
     color: #ffffff;
     font-size: 13px;
     font-weight: 700;
@@ -87,7 +87,7 @@
     width: 38px;
     height: 38px;
     border-radius: 50%;
-    background: #f59e0b; /* Vibrant Amber */
+    background: #f59e0b; 
     color: #ffffff;
     display: flex;
     align-items: center;

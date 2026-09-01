@@ -16,7 +16,7 @@ export default function useList({
     deleteEndpoint,
     getId,
     deleteLabel = "this item",
-    // added this for jjob card settlement
+    
     isSettled = false,
     onSettle,
     settle

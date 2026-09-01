@@ -54,11 +54,11 @@ export const routes = [
             },
             {
                 path:'/app/jobcard/manage',
-                element: <JobcardManagePage isEdit={false} /> // create jobcard page
+                element: <JobcardManagePage isEdit={false} /> 
             },
             {
                 path:'/app/jobcard/manage/:id',
-                element: <JobcardManagePage isEdit={true} /> // update jobcard page
+                element: <JobcardManagePage isEdit={true} /> 
             },
             {
                 path:'/inv/part',

@@ -279,7 +279,7 @@ export default function ChatWidget() {
                         )}
                     </div>
 
-                    {/* Suggestions from the latest assistant message */}
+                    {}
                     {(() => {
                         const last = [...messages].reverse().find((m) => m.role === "assistant");
                         if (busy || !last?.suggestions?.length) return null;

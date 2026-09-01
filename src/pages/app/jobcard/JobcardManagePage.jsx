@@ -8,10 +8,6 @@ import useAuthApi from "../../../api/useAuthApi";
 import { toast } from "react-toastify";
 import AddableSelect from "../../../components/AddableSelect/AddableSelect";
 
-// ---------------------------------------------------------------------------
-// Inline style for the table-header info icon tooltip
-// (avoids adding a CSS file dependency for a single element)
-// ---------------------------------------------------------------------------
 const infoIconStyle = {
     display:        "inline-flex",
     alignItems:     "center",
@@ -27,10 +23,6 @@ const infoIconStyle = {
     userSelect:     "none",
     flexShrink:     0
 };
-
-// ---------------------------------------------------------------------------
-// Constants
-// ---------------------------------------------------------------------------
 
 const DEFAULT_FORM = {
     customer_name: "",
@@ -56,28 +48,15 @@ const getEmptyDetail = () => ({
     remarks: ""
 });
 
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-
-/** Convert API rows to { value, label } options for selects. */
 const toOptions = (rows = []) =>
     rows.map((r) => ({ value: String(r.id), label: r.name ?? r.label }));
 
-/**
- * Unwrap the jobcard + details from various API response shapes.
- * Returns { jobcard, details } or null.
- */
 const extractJobcardData = (res) => {
     if (res?.jobcard)           return res;
     if (res?.data?.jobcard)     return res.data;
     if (res?.data?.data?.jobcard) return res.data.data;
     return null;
 };
-
-// ---------------------------------------------------------------------------
-// Component
-// ---------------------------------------------------------------------------
 
 export default function JobcardManagePage({ isEdit = false }) {
     const navigate = useNavigate();
@@ -89,14 +68,11 @@ export default function JobcardManagePage({ isEdit = false }) {
     const [saving, setSaving] = useState(false);
     const [errors, setErrors] = useState({});
 
-    // Dropdown data
     const [partsDDL, setPartsDDL] = useState([]);
     const [vehicleTypes, setVehicleTypes] = useState([]);
     const [vehicles, setVehicles] = useState([]);
 
-    // -----------------------------------------------------------------------
-    // Data loading
-    // -----------------------------------------------------------------------
+    
 
     useEffect(() => {
         loadVehicleDropdowns();
@@ -111,12 +87,11 @@ export default function JobcardManagePage({ isEdit = false }) {
         if (Array.isArray(models)) setVehicles(toOptions(models));
     };
 
-    // Load parts DDL and (when editing) the jobcard together so that
-    // available_qty can be computed synchronously in one pass — no
-    // secondary effect needed.
+    
+    
     useEffect(() => {
         if (!isEdit || !id) {
-            // Create mode: just load the parts DDL for the part selector.
+            
             const loadParts = async () => {
                 const res = await callApi({ url: "/api/jobcard/loadddl", method: "GET" });
                 if (res) setPartsDDL(res);
@@ -132,7 +107,7 @@ export default function JobcardManagePage({ isEdit = false }) {
         const loadJobcard = async () => {
             setLoading(true);
             try {
-                // Fetch parts DDL and jobcard data in parallel.
+                
                 const [parts, res] = await Promise.all([
                     callApi({ url: "/api/jobcard/loadddl", method: "GET" }),
                     callApi({ url: `/api/jobcard/get/${id}`, method: "GET" })
@@ -140,7 +115,6 @@ export default function JobcardManagePage({ isEdit = false }) {
 
                 if (cancelled) return;
 
-                // Parts DDL is available for the rest of the session too.
                 const ddl = Array.isArray(parts) ? parts : [];
                 setPartsDDL(ddl);
 
@@ -149,11 +123,9 @@ export default function JobcardManagePage({ isEdit = false }) {
 
                 const { jobcard, details = [] } = data;
 
-                // Build a quick lookup so we can compute available_qty inline.
-                // The DDL returns stock AFTER deducting this job card's committed
-                // qty (because the view counts all active detail rows). We add
-                // the committed qty back so the field shows the full effective
-                // available stock the user can work with.
+                
+
+                
                 const partMap = new Map(ddl.map((p) => [String(p.id), p]));
 
                 setForm({
@@ -178,7 +150,7 @@ export default function JobcardManagePage({ isEdit = false }) {
 
                         return {
                             part_id:       item.part_id ? String(item.part_id) : "",
-                            // View already deducted this job card's qty, so add it back.
+                            
                             available_qty: stockInView + quantity,
                             quantity,
                             rate:          rate || Number(part?.rate) || 0,
@@ -196,9 +168,7 @@ export default function JobcardManagePage({ isEdit = false }) {
         return () => { cancelled = true; };
     }, [id, isEdit]);
 
-    // -----------------------------------------------------------------------
-    // Inline creation helpers (vehicle type / vehicle / part)
-    // -----------------------------------------------------------------------
+    
 
     const createVehicleType = async (name) => {
         const res = await callApi({
@@ -242,21 +212,18 @@ export default function JobcardManagePage({ isEdit = false }) {
         return { value: String(res.id), label: entry.label };
     };
 
-    // -----------------------------------------------------------------------
-    // Form field updaters
-    // -----------------------------------------------------------------------
+    
 
     const updateField = (name, value) =>
         setForm((prev) => ({ ...prev, [name]: value }));
 
-    // Problems list
     const addProblem    = () => setForm((prev) => ({ ...prev, problems: [...prev.problems, ""] }));
     const removeProblem = (index) =>
         setForm((prev) => ({
             ...prev,
             problems: prev.problems.length > 1
                 ? prev.problems.filter((_, i) => i !== index)
-                : [""]   // keep at least one empty row
+                : [""]   
         }));
     const updateProblem = (index, value) =>
         setForm((prev) => ({
@@ -264,12 +231,10 @@ export default function JobcardManagePage({ isEdit = false }) {
             problems: prev.problems.map((p, i) => (i === index ? value : p))
         }));
 
-    // Parts / Labour detail rows
     const addDetail    = () => setForm((prev) => ({ ...prev, detail: [...prev.detail, getEmptyDetail()] }));
     const removeDetail = (index) =>
         setForm((prev) => ({ ...prev, detail: prev.detail.filter((_, i) => i !== index) }));
 
-    /** Update any field on a detail row and keep total in sync. */
     const updateDetail = (index, name, value) => {
         setForm((prev) => ({
             ...prev,
@@ -278,7 +243,6 @@ export default function JobcardManagePage({ isEdit = false }) {
 
                 let updated = { ...item, [name]: value };
 
-                // Cap quantity to available stock
                 if (name === "quantity" && Number(value) > Number(item.available_qty)) {
                     toast.warn(`Only ${Number(item.available_qty)} in stock for this part.`);
                     updated.quantity = Number(item.available_qty);
@@ -290,7 +254,6 @@ export default function JobcardManagePage({ isEdit = false }) {
         }));
     };
 
-    /** Select (or change) the part for a detail row; resets rate/qty from DDL data. */
     const updatePart = (index, partId) => {
         const part = partsDDL.find((p) => String(p.id) === String(partId));
         const rate         = Number(part?.rate)          || 0;
@@ -305,20 +268,15 @@ export default function JobcardManagePage({ isEdit = false }) {
                     available_qty: availableQty,
                     quantity:      1,
                     rate,
-                    total:         rate   // qty = 1, so total = rate
+                    total:         rate   
                 }
             )
         }));
     };
 
-    // -----------------------------------------------------------------------
-    // Derived data
-    // -----------------------------------------------------------------------
+    
 
-    /**
-     * Build the parts options for a specific detail row.
-     * Parts already selected in OTHER rows are excluded to prevent duplicates.
-     */
+    
     const getAvailablePartOptions = (rowIndex) => {
         const usedPartIds = new Set(
             form.detail
@@ -331,9 +289,7 @@ export default function JobcardManagePage({ isEdit = false }) {
             .map((p) => ({ value: String(p.id), label: p.label }));
     };
 
-    // -----------------------------------------------------------------------
-    // Validation & submit
-    // -----------------------------------------------------------------------
+    
 
     const validate = () => {
         const next = {};
@@ -423,9 +379,7 @@ export default function JobcardManagePage({ isEdit = false }) {
         }
     };
 
-    // -----------------------------------------------------------------------
-    // Render
-    // -----------------------------------------------------------------------
+    
 
     return (
         <div className="form-page">
@@ -441,7 +395,7 @@ export default function JobcardManagePage({ isEdit = false }) {
                         <form onSubmit={submit}>
                             <div className="form-sections">
 
-                                {/* ── Customer Details ─────────────────────── */}
+                                {}
                                 <section className="jobcard-section">
                                     <div className="section-header">
                                         <h3>Customer Details</h3>
@@ -470,7 +424,7 @@ export default function JobcardManagePage({ isEdit = false }) {
                                     </div>
                                 </section>
 
-                                {/* ── Vehicle Details ───────────────────────── */}
+                                {}
                                 <section className="jobcard-section">
                                     <div className="section-header">
                                         <h3>Vehicle Details</h3>
@@ -520,7 +474,7 @@ export default function JobcardManagePage({ isEdit = false }) {
                                     </div>
                                 </section>
 
-                                {/* ── Problems ──────────────────────────────── */}
+                                {}
                                 <section className="jobcard-section">
                                     <div className="section-header">
                                         <h3>Problems</h3>
@@ -561,7 +515,7 @@ export default function JobcardManagePage({ isEdit = false }) {
                                     )}
                                 </section>
 
-                                {/* ── Parts & Labour ────────────────────────── */}
+                                {}
                                 <section className="jobcard-section">
                                     <div className="section-header">
                                         <h3>Parts &amp; Labour</h3>
@@ -610,7 +564,7 @@ export default function JobcardManagePage({ isEdit = false }) {
 
                                                 {form.detail.map((item, index) => (
                                                     <tr key={index}>
-                                                        {/* Part selector — excludes already-selected parts */}
+                                                        {}
                                                         <td>
                                                             <AddableSelect
                                                                 bare
@@ -628,7 +582,7 @@ export default function JobcardManagePage({ isEdit = false }) {
                                                             )}
                                                         </td>
 
-                                                        {/* Available stock (read-only) */}
+                                                        {}
                                                         <td>
                                                             <input
                                                                 className="form-input"
@@ -638,7 +592,7 @@ export default function JobcardManagePage({ isEdit = false }) {
                                                             />
                                                         </td>
 
-                                                        {/* Quantity */}
+                                                        {}
                                                         <td>
                                                             <input
                                                                 className="form-input"
@@ -654,7 +608,7 @@ export default function JobcardManagePage({ isEdit = false }) {
                                                             )}
                                                         </td>
 
-                                                        {/* Rate */}
+                                                        {}
                                                         <td>
                                                             <input
                                                                 className="form-input"
@@ -670,7 +624,7 @@ export default function JobcardManagePage({ isEdit = false }) {
                                                             )}
                                                         </td>
 
-                                                        {/* Total (computed, read-only) */}
+                                                        {}
                                                         <td>
                                                             <input
                                                                 readOnly
@@ -679,7 +633,7 @@ export default function JobcardManagePage({ isEdit = false }) {
                                                             />
                                                         </td>
 
-                                                        {/* Remove row */}
+                                                        {}
                                                         <td className="action-cell">
                                                             <button
                                                                 type="button"
@@ -702,7 +656,7 @@ export default function JobcardManagePage({ isEdit = false }) {
                                     )}
                                 </section>
 
-                                {/* ── Remarks ───────────────────────────────── */}
+                                {}
                                 <section className="jobcard-section">
                                     <div className="section-header">
                                         <h3>Remarks</h3>
@@ -715,7 +669,7 @@ export default function JobcardManagePage({ isEdit = false }) {
                                     />
                                 </section>
 
-                                {/* ── Footer actions ────────────────────────── */}
+                                {}
                                 <div className="form-footer">
                                     <button
                                         type="button"
@@ -745,11 +699,6 @@ export default function JobcardManagePage({ isEdit = false }) {
     );
 }
 
-// ---------------------------------------------------------------------------
-// Sub-components
-// ---------------------------------------------------------------------------
-
-/** Labelled text input with inline error display. */
 function Input({ label, name, value, onChange, error }) {
     return (
         <div className="form-group">

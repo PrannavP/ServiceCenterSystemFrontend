@@ -1,6 +1,5 @@
-/* ============ Web dark mode + collapsible sidebar ============ */
 
-/* ---- Collapsible sidebar ---- */
+
 .sidebar {
     transition: width 0.22s ease;
 }
@@ -57,7 +56,6 @@
     color: #fff;
 }
 
-/* ============ Dark theme ============ */
 :root[data-theme="dark"] body {
     background: #0f172a;
     color: #e2e8f0;
@@ -68,7 +66,6 @@
     background: #0b1220;
 }
 
-/* Cards / panels / surfaces */
 :root[data-theme="dark"] .list-container,
 :root[data-theme="dark"] .form-card,
 :root[data-theme="dark"] .dashboard-panel,
@@ -78,7 +75,6 @@
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
 }
 
-/* Titles that used dark gradient text -> make light */
 :root[data-theme="dark"] .list-header h2,
 :root[data-theme="dark"] .dashboard-title {
     background: none;
@@ -111,7 +107,6 @@
     color: #94a3b8;
 }
 
-/* Tables */
 :root[data-theme="dark"] .table-wrapper {
     border-color: #334155;
 }
@@ -138,7 +133,6 @@
     background: #14342b;
 }
 
-/* Inputs */
 :root[data-theme="dark"] .form-input,
 :root[data-theme="dark"] .chart-filter,
 :root[data-theme="dark"] select.form-input,

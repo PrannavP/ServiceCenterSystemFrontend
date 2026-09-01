@@ -143,7 +143,6 @@ export default function ReceiptManagePage({ isEdit = false }) {
                     [name]: value
                 };
 
-                // When a part is picked, remember its stock so quantity can be capped.
                 if (name === "part_id") {
                     const selected = partsDDL.find((p) => String(p.id) === String(value));
                     nextItem.max_quantity = selected?.total_quantity ?? null;
@@ -152,7 +151,6 @@ export default function ReceiptManagePage({ isEdit = false }) {
                     }
                 }
 
-                // Cap the quantity to the part's available stock.
                 if (name === "quantity" && item.max_quantity != null) {
                     if ((Number(value) || 0) > item.max_quantity) {
                         toast.warn(`Only ${item.max_quantity} in stock for this part.`);

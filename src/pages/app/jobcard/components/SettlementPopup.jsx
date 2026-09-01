@@ -2,43 +2,6 @@ import { useEffect, useState } from "react";
 import useAuthApi from "../../../../api/useAuthApi";
 import "../../../../styles/settlementpopup.css";
 
-// ---------------------------------------------------------------------------
-// Luhn Algorithm — Credit / Debit Card Number Validation
-// ---------------------------------------------------------------------------
-//
-// The Luhn algorithm (also known as the "modulus 10" algorithm) is a simple
-// checksum formula used to validate identification numbers such as credit
-// card numbers. It was designed by IBM scientist Hans Peter Luhn in 1954.
-//
-// HOW IT WORKS (right to left):
-//
-//   Given the card number: 4 5 3 9 1 4 8 8 0 3 4 3 6 4 6 7
-//
-//   Step 1 — Keep the last digit (check digit) aside.
-//             It will be used at the end to verify.
-//
-//   Step 2 — Starting from the second-to-last digit, moving left,
-//             double every second digit.
-//
-//   Step 3 — If doubling produces a number > 9, subtract 9 from it.
-//             (Equivalent to summing the two digits of the product.)
-//             e.g. 8 x 2 = 16 -> 16 - 9 = 7
-//
-//   Step 4 — Sum all the digits (both the doubled and the untouched ones)
-//             plus the check digit from Step 1.
-//
-//   Step 5 — If the total modulo 10 === 0, the number is valid.
-//
-// EXAMPLE with card "4539148803436467":
-//   Digits (R->L skip check): 6,4,3,4,0,8,8,4,1,9,3,5,4  <- every other doubled
-//   This produces a total that is divisible by 10 -> VALID
-//
-// WHY IT MATTERS:
-//   The algorithm catches ~98% of single-digit errors and all transpositions
-//   of adjacent digits (except 0<->9). It is NOT a cryptographic check — it
-//   only confirms the number is structurally plausible, not that the card exists.
-//
-// ---------------------------------------------------------------------------
 const luhn = (value) => {
     const digits = value.replace(/\D/g, "");
     if (!digits.length) return false;
@@ -46,13 +9,12 @@ const luhn = (value) => {
     let sum = 0;
     let shouldDouble = false;
 
-    // Traverse digits from right to left
     for (let i = digits.length - 1; i >= 0; i--) {
         let digit = parseInt(digits[i], 10);
 
         if (shouldDouble) {
             digit *= 2;
-            // If doubling exceeds 9, subtract 9 (same as summing both digits)
+            
             if (digit > 9) digit -= 9;
         }
 
@@ -63,34 +25,19 @@ const luhn = (value) => {
     return sum % 10 === 0;
 };
 
-// ---------------------------------------------------------------------------
-// Helpers
-// ---------------------------------------------------------------------------
-
-/** Format raw digits as "XXXX XXXX XXXX XXXX" as the user types. */
 const formatCardNumber = (raw) =>
     raw.replace(/\D/g, "").slice(0, 16).replace(/(.{4})/g, "$1 ").trim();
 
-/** Format raw digits as "MM/YY" as the user types. */
 const formatExpiry = (raw) => {
     const digits = raw.replace(/\D/g, "").slice(0, 4);
     return digits.length > 2 ? `${digits.slice(0, 2)}/${digits.slice(2)}` : digits;
 };
 
-/**
- * Convert display value "MM/YY" to ISO date "YYYY-MM-01".
- * e.g. "08/27" -> "2027-08-01"
- * Day is always 01 — only month/year carry meaning for card expiry.
- */
 const expiryToISODate = (mmyy) => {
     const [mm, yy] = mmyy.split("/");
     if (!mm || !yy) return null;
     return `20${yy}-${mm.padStart(2, "0")}-01`;
 };
-
-// ---------------------------------------------------------------------------
-// Constants
-// ---------------------------------------------------------------------------
 
 const PAYMENT_METHODS = { CASH: "CASH", CARD: "CARD" };
 
@@ -102,10 +49,6 @@ const DEFAULT_FORM = {
     name_on_card:     ""
 };
 
-// ---------------------------------------------------------------------------
-// Component
-// ---------------------------------------------------------------------------
-
 const SettlementPopup = ({ jobcard_id = 0, onSuccess, onClose }) => {
     const { callApi } = useAuthApi();
 
@@ -116,7 +59,6 @@ const SettlementPopup = ({ jobcard_id = 0, onSuccess, onClose }) => {
     const [form,          setForm]          = useState(DEFAULT_FORM);
     const [errors,        setErrors]        = useState({});
 
-    // ── On mount: load job card summary and pre-fill the amount ──────────
     useEffect(() => {
         const load = async () => {
             setIsLoading(true);
@@ -129,7 +71,7 @@ const SettlementPopup = ({ jobcard_id = 0, onSuccess, onClose }) => {
                 if (res?.[0]) {
                     const data = res[0];
                     setSummary(res);
-                    // Pre-fill amount from the API and lock the field
+                    
                     setForm((prev) => ({
                         ...prev,
                         settled_amount: data.jobcard_total_amount ?? ""
@@ -143,7 +85,6 @@ const SettlementPopup = ({ jobcard_id = 0, onSuccess, onClose }) => {
         load();
     }, [jobcard_id]);
 
-    // ── Update a form field, applying formatting for card-specific fields ─
     const updateForm = (name, value) => {
         let formatted = value;
         if (name === "card_number")      formatted = formatCardNumber(value);
@@ -152,13 +93,11 @@ const SettlementPopup = ({ jobcard_id = 0, onSuccess, onClose }) => {
         setForm((prev) => ({ ...prev, [name]: formatted }));
     };
 
-    // ── Switch payment method and clear field errors ───────────────────
     const switchMethod = (method) => {
         setPaymentMethod(method);
         setErrors({});
     };
 
-    // ── Validate required fields for the active payment method ────────
     const validate = () => {
         const next = {};
         const amount = parseFloat(form.settled_amount);
@@ -188,7 +127,6 @@ const SettlementPopup = ({ jobcard_id = 0, onSuccess, onClose }) => {
         return Object.keys(next).length === 0;
     };
 
-    // ── Submit settlement ─────────────────────────────────────────────
     const handleSettle = async () => {
         if (!validate()) return;
 
@@ -220,7 +158,6 @@ const SettlementPopup = ({ jobcard_id = 0, onSuccess, onClose }) => {
         }
     };
 
-    // ── Render ────────────────────────────────────────────────────────
     if (isLoading) {
         return <p className="sp-loading">Loading settlement details...</p>;
     }
@@ -228,7 +165,7 @@ const SettlementPopup = ({ jobcard_id = 0, onSuccess, onClose }) => {
     return (
         <div className="sp-root">
 
-            {/* Job card summary */}
+            {}
             {summary && (
                 <div className="sp-summary-card">
                     <div className="sp-summary-row">
@@ -253,7 +190,7 @@ const SettlementPopup = ({ jobcard_id = 0, onSuccess, onClose }) => {
                 </div>
             )}
 
-            {/* Payment method toggle */}
+            {}
             <div className="sp-toggle-group">
                 {Object.values(PAYMENT_METHODS).map((method) => (
                     <button
@@ -267,10 +204,10 @@ const SettlementPopup = ({ jobcard_id = 0, onSuccess, onClose }) => {
                 ))}
             </div>
 
-            {/* Fields */}
+            {}
             <div className="sp-fields">
 
-                {/* Card-only fields */}
+                {}
                 {paymentMethod === PAYMENT_METHODS.CARD && (
                     <>
                         <div className="sp-field-group">
@@ -331,7 +268,7 @@ const SettlementPopup = ({ jobcard_id = 0, onSuccess, onClose }) => {
                     </>
                 )}
 
-                {/* Amount — shown for both methods, pre-filled and locked */}
+                {}
                 <div className="sp-field-group">
                     <label className="sp-field-label">
                         {paymentMethod === PAYMENT_METHODS.CASH ? "Amount Received (Rs.)" : "Amount to Charge (Rs.)"}
@@ -352,7 +289,7 @@ const SettlementPopup = ({ jobcard_id = 0, onSuccess, onClose }) => {
 
             </div>
 
-            {/* Footer */}
+            {}
             <div className="sp-footer">
                 <button
                     type="button"

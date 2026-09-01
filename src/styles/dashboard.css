@@ -111,8 +111,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #d1fae5; /* Emerald 100 */
-    color: #10b981; /* Emerald 500 */
+    background: #d1fae5; 
+    color: #10b981; 
 }
 
 .stat-value {
@@ -130,11 +130,11 @@
 }
 
 .stat-trend.positive {
-    color: #10b981; /* Emerald */
+    color: #10b981; 
 }
 
 .stat-trend.negative {
-    color: #ef4444; /* Vibrant Crimson */
+    color: #ef4444; 
 }
 
 .stat-trend.neutral {
@@ -240,10 +240,6 @@
         gap: 16px;
     }
 }
-
-/* ===========================
-   Charts Section
-=========================== */
 
 .chart-panel {
     display: flex;

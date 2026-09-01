@@ -1,4 +1,4 @@
-/* ── Root ──────────────────────────────────────────────────────────────── */
+
 
 .sp-root {
     display:        flex;
@@ -6,15 +6,11 @@
     gap:            20px;
 }
 
-/* ── Loading ───────────────────────────────────────────────────────────── */
-
 .sp-loading {
     text-align: center;
     color:      #6b7280;
     margin:     24px 0;
 }
-
-/* ── Summary card ──────────────────────────────────────────────────────── */
 
 .sp-summary-card {
     background:    #f9fafb;
@@ -52,8 +48,6 @@
     margin:     10px 0;
 }
 
-/* ── Payment method toggle ─────────────────────────────────────────────── */
-
 .sp-toggle-group {
     display:       flex;
     gap:           8px;
@@ -80,8 +74,6 @@
     color:      #111827;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
-
-/* ── Form fields ───────────────────────────────────────────────────────── */
 
 .sp-fields {
     display:        flex;
@@ -137,8 +129,6 @@
     font-size: 12px;
     color:     #ef4444;
 }
-
-/* ── Footer ────────────────────────────────────────────────────────────── */
 
 .sp-footer {
     display:         flex;

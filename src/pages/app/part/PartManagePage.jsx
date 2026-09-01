@@ -212,20 +212,8 @@ export default function PartManagePage({ isEdit = false }) {
                                     </label>
                                 </div>
 
-                                {/* Commented this image upload field part because its not needed as of now. Prannav Panta */}
-                                {/* <div className="form-group col-4">
-                                    <label className="form-label">Image (optional)</label>
-                                    <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-                                        {(imagePreview || existingImage) && (
-                                            <img
-                                                src={imagePreview || `${API_BASE}${existingImage}`}
-                                                alt="Part"
-                                                style={{ width: 72, height: 72, objectFit: "cover", borderRadius: 10, border: "1px solid #e2e8f0" }}
-                                            />
-                                        )}
-                                        <input type="file" accept="image/*" onChange={onImageChange} />
-                                    </div>
-                                </div> */}
+                                {}
+                                {}
 
                                 <div className="form-footer col-4">
                                     <button

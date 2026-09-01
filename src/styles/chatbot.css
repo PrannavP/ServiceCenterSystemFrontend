@@ -1,4 +1,4 @@
-/* ============ Aria — Service Center AI Assistant widget ============ */
+
 :root {
     --aria-green: #10b981;
     --aria-green-dark: #059669;
@@ -11,7 +11,6 @@
     --aria-shadow: 0 20px 60px rgba(15, 23, 42, 0.18);
 }
 
-/* ---- Floating launcher ---- */
 .aria-fab {
     position: fixed;
     right: 24px;
@@ -54,7 +53,6 @@
     border: 2px solid #fff;
 }
 
-/* ---- Panel ---- */
 .aria-panel {
     position: fixed;
     right: 24px;
@@ -74,7 +72,6 @@
     transform-origin: bottom right;
 }
 
-/* ---- Header ---- */
 .aria-header {
     padding: 16px 18px;
     background: linear-gradient(135deg, #10b981 0%, #0ea5a3 100%);
@@ -105,7 +102,6 @@
 }
 .aria-header button:hover { background: rgba(255,255,255,0.28); }
 
-/* ---- Messages ---- */
 .aria-body {
     flex: 1;
     overflow-y: auto;
@@ -147,7 +143,6 @@
 }
 .aria-bubble strong { font-weight: 600; }
 
-/* ---- Cards ---- */
 .aria-cards { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; max-width: 88%; }
 .aria-card {
     background: var(--aria-bg);
@@ -168,7 +163,6 @@
 .aria-table td { padding: 6px 6px; border-bottom: 1px solid #f5f6f8; color: var(--aria-ink); }
 .aria-table tr:last-child td { border-bottom: none; }
 
-/* ---- Actions & suggestions ---- */
 .aria-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; max-width: 88%; }
 .aria-action-btn {
     display: inline-flex; align-items: center; gap: 6px;
@@ -188,14 +182,12 @@
 }
 .aria-chip:hover { border-color: var(--aria-green); color: var(--aria-green-dark); transform: translateY(-1px); }
 
-/* ---- Typing ---- */
 .aria-typing { display: flex; gap: 4px; padding: 12px 14px; }
 .aria-typing span { width: 7px; height: 7px; border-radius: 50%; background: var(--aria-green); opacity: 0.55; animation: aria-bounce 1.2s infinite ease-in-out; }
 .aria-typing span:nth-child(2) { animation-delay: 0.18s; }
 .aria-typing span:nth-child(3) { animation-delay: 0.36s; }
 @keyframes aria-bounce { 0%,60%,100% { transform: translateY(0); opacity: 0.45; } 30% { transform: translateY(-6px); opacity: 1; } }
 
-/* ---- Footer / input ---- */
 .aria-footer { padding: 12px 14px 14px; background: var(--aria-bg); border-top: 1px solid var(--aria-line); }
 .aria-input-wrap { display: flex; align-items: flex-end; gap: 8px; background: var(--aria-panel-bg); border: 1px solid var(--aria-line); border-radius: 16px; padding: 6px 6px 6px 14px; transition: border-color 0.2s; }
 .aria-input-wrap:focus-within { border-color: var(--aria-green); }

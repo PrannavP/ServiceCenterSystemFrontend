@@ -53,8 +53,7 @@ const JobcardListPage = () => {
                         onClose={closeModal}
                     />
                 ),
-                // Footer is rendered inside SettlementPopup itself so the
-                // Settle / Cancel buttons have direct access to form state.
+
                 footerActions: []
             });
         },
