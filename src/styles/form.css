@@ -433,3 +433,341 @@
         grid-template-columns: minmax(0, 1fr) 38px;
     }
 }
+
+/* Image Upload UI */
+.image-upload-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.image-upload-zone {
+    border: 2px dashed #cbd5e1;
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+    background: #f8fafc;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-upload-zone:hover {
+    border-color: #10b981;
+    background: #ecfdf5;
+}
+
+.upload-icon {
+    font-size: 32px;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.upload-placeholder p {
+    color: #334155;
+    font-weight: 600;
+    margin: 0 0 4px 0;
+    font-size: 14px;
+}
+
+.upload-placeholder small {
+    color: #64748b;
+    font-size: 12px;
+}
+
+.image-preview {
+    position: relative;
+    width: 100%;
+    max-width: 200px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.image-preview img {
+    width: 100%;
+    height: auto;
+    display: block;
+    aspect-ratio: 1;
+    object-fit: cover;
+}
+
+.remove-image-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(239, 68, 68, 0.9);
+    color: white;
+    border: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    text-align: left;
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.detail-table td {
+    padding: 12px;
+    vertical-align: top;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.detail-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.detail-table th:nth-child(2),
+.detail-table th:nth-child(3),
+.detail-table th:nth-child(4) {
+    width: 140px;
+}
+
+.detail-table th:last-child,
+.action-cell {
+    width: 58px;
+    text-align: center;
+}
+
+.total-input {
+    color: #111827;
+    font-weight: 600;
+    background: #f9fafb;
+}
+
+.detail-empty {
+    padding: 24px 12px !important;
+    color: #6b7280;
+    text-align: center;
+    background: #fcfcfd;
+}
+
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 40px;
+}
+
+.checkbox-group input {
+    width: 16px;
+    height: 16px;
+}
+
+.toggle-row {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 40px;
+    color: #374151;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.toggle-row input {
+    width: 18px;
+    height: 18px;
+    accent-color: #2563eb;
+}
+
+@media (max-width: 1400px) {
+    .form-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 992px) {
+    .form-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .form-group.col-2,
+    .form-group.col-3,
+    .form-group.col-4 {
+        grid-column: span 2;
+    }
+}
+
+@media (max-width: 640px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-group,
+    .form-group.col-1,
+    .form-group.col-2,
+    .form-group.col-3,
+    .form-group.col-4 {
+        grid-column: span 1;
+    }
+
+    .form-footer {
+        flex-direction: column-reverse;
+    }
+
+    .form-footer .btn {
+        width: 100%;
+    }
+
+    .section-header {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .section-header .btn {
+        width: 100%;
+    }
+
+    .problem-row {
+        grid-template-columns: minmax(0, 1fr) 38px;
+    }
+}
+
+/* Image Upload UI */
+.image-upload-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.image-upload-zone {
+    border: 2px dashed #cbd5e1;
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+    background: #f8fafc;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-upload-zone:hover {
+    border-color: #10b981;
+    background: #ecfdf5;
+}
+
+.upload-icon {
+    font-size: 32px;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.upload-placeholder p {
+    color: #334155;
+    font-weight: 600;
+    margin: 0 0 4px 0;
+    font-size: 14px;
+}
+
+.upload-placeholder small {
+    color: #64748b;
+    font-size: 12px;
+}
+
+.image-preview {
+    position: relative;
+    width: 100%;
+    max-width: 200px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.image-preview img {
+    width: 100%;
+    height: auto;
+    display: block;
+    aspect-ratio: 1;
+    object-fit: cover;
+}
+
+.remove-image-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(239, 68, 68, 0.9);
+    color: white;
+    border: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.remove-image-btn:hover {
+    background: #dc2626;
+    transform: scale(1.1);
+}
+
+/* Dark Mode Support for Forms */
+[data-theme="dark"] .form-label {
+    color: #cbd5e1;
+}
+
+[data-theme="dark"] .form-input,
+[data-theme="dark"] .form-select,
+[data-theme="dark"] .form-textarea {
+    background: #0f172a;
+    border-color: #334155;
+    color: #f8fafc;
+}
+
+[data-theme="dark"] .form-input:focus,
+[data-theme="dark"] .form-select:focus,
+[data-theme="dark"] .form-textarea:focus {
+    background: #1e293b;
+    border-color: #10b981;
+}
+
+[data-theme="dark"] .form-input:disabled,
+[data-theme="dark"] .form-textarea:disabled {
+    background: #1e293b;
+    border-color: #334155;
+    color: #64748b;
+}
+
+[data-theme="dark"] .react-select__control {
+    background: #0f172a !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .react-select__control--is-focused {
+    background: #1e293b !important;
+    border-color: #10b981 !important;
+}
+
+[data-theme="dark"] .react-select__menu {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+}
+
+[data-theme="dark"] .react-select__option {
+    background: #1e293b !important;
+    color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .react-select__option--is-focused {
+    background: #334155 !important;
+}
+
+[data-theme="dark"] .react-select__single-value {
+    color: #f8fafc !important;
+}
+
+[data-theme="dark"] .form-hint {
+    color: #94a3b8;
+}

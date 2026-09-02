@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import useAuthApi from "../../api/useAuthApi";
-import { FiUsers, FiFileText, FiTool, FiTrendingUp, FiPlus, FiClock, FiCheckCircle, FiDollarSign } from "react-icons/fi";
+import { FiUsers, FiFileText, FiTool, FiTrendingUp, FiPlus, FiClock, FiCheckCircle } from "react-icons/fi";
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from "recharts";
 import "../../styles/dashboard.css";
 
@@ -52,11 +52,25 @@ export default function Dashboard() {
         { title: "Created Today", value: loading ? "…" : s.createdToday ?? 0, icon: <FiCheckCircle size={20} />, to: "/app/jobcard", hint: "New job cards today" },
         { title: "Pending Billing", value: loading ? "…" : s.pendingBilling ?? 0, icon: <FiClock size={20} />, to: "/app/billing", hint: "Job cards not yet billed" },
         { title: "Customers", value: loading ? "…" : s.totalCustomers ?? 0, icon: <FiUsers size={20} />, to: "/app/jobcard", hint: "Unique customers served" },
-        { title: "Revenue", value: loading ? "…" : money(s.revenueTotal), icon: <FiDollarSign size={20} />, to: "/app/billing", hint: `This month: ${money(s.revenueMonth)}` },
+        { title: "Revenue", value: loading ? "…" : money(s.revenueTotal), icon: <FiTrendingUp size={20} />, to: "/app/billing", hint: `This month: ${money(s.revenueMonth)}` },
     ];
 
     return (
         <div className="dashboard-container">
+            {localStorage.getItem("impersonated_service_center") && (
+                <div className="impersonation-banner" style={{ background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)', color: '#fff', padding: '12px 20px', borderRadius: '12px', marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '12px', fontWeight: '600', boxShadow: '0 4px 15px rgba(245, 158, 11, 0.3)' }}>
+                    <FiUsers size={20} />
+                    <span>You are currently viewing this dashboard as <strong>Service Center ID: {localStorage.getItem("impersonated_service_center")}</strong>. Actions taken here will affect their account.</span>
+                    <button 
+                        onClick={() => { localStorage.removeItem("impersonated_service_center"); window.location.reload(); }} 
+                        style={{ marginLeft: 'auto', background: 'rgba(0,0,0,0.15)', border: '1px solid rgba(255,255,255,0.2)', color: '#fff', padding: '6px 16px', borderRadius: '6px', cursor: 'pointer', fontWeight: 'bold', transition: 'all 0.2s' }}
+                        onMouseOver={(e) => e.currentTarget.style.background = 'rgba(0,0,0,0.25)'}
+                        onMouseOut={(e) => e.currentTarget.style.background = 'rgba(0,0,0,0.15)'}
+                    >
+                        Exit Impersonation
+                    </button>
+                </div>
+            )}
             <div className="dashboard-header">
                 <div>
                     <h1 className="dashboard-title">Dashboard</h1>
@@ -94,7 +108,7 @@ export default function Dashboard() {
             <div className="dashboard-content-grid">
                 <div className="dashboard-panel chart-panel">
                     <div className="panel-header">
-                        <h3 className="panel-title">Revenue — last 7 days</h3>
+                        <h3 className="panel-title">Revenue (Last 7 Days)</h3>
                         <div className="stat-trend positive">
                             <FiTrendingUp size={14} />
                             <span>{money(s.revenueMonth)} this month</span>
@@ -124,7 +138,7 @@ export default function Dashboard() {
 
                 <div className="dashboard-panel chart-panel">
                     <div className="panel-header">
-                        <h3 className="panel-title">Job Cards — last 7 days</h3>
+                        <h3 className="panel-title">Job Cards (Last 7 Days)</h3>
                     </div>
                     <div className="chart-container">
                         <ResponsiveContainer width="100%" height="100%">

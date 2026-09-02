@@ -19,7 +19,8 @@ export default function useList({
     
     isSettled = false,
     onSettle,
-    settle
+    settle,
+    customActions
 }) {
     const { callApi } = useAuthApi();
     const [deletingId, setDeletingId] = useState(null);
@@ -108,6 +109,10 @@ export default function useList({
             return formatDate(value);
         }
 
+        if (column.key === "user_type" && value) {
+            return value.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+        }
+
         return value ?? "-";
     };
 
@@ -148,7 +153,7 @@ export default function useList({
 
                                 return (
                                     <tr key={index}>
-                                        <td>
+                                        <td data-label="Action">
                                             <div className="action-buttons-group">
                                                 <button
                                                     className="edit-btn"
@@ -192,11 +197,13 @@ export default function useList({
                                                         {deletingId === resolveId(item) ? "..." : "Delete"}
                                                     </button>
                                                 )}
+
+                                                {customActions && customActions(item)}
                                             </div>
                                         </td>
 
                                         {columns.map((column) => (
-                                            <td key={column.key}>
+                                            <td key={column.key} data-label={column.label}>
                                                 {renderCell(item, column)}
                                             </td>
                                         ))}

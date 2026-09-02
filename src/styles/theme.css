@@ -165,3 +165,34 @@
     border-color: #14804f;
     color: #6ee7b7;
 }
+
+/* Sidebar Dark Theme Overrides */
+:root[data-theme="dark"] .sidebar {
+    background: #18181b; 
+    color: #f8fafc;
+    border-right: 1px solid #27272a;
+}
+:root[data-theme="dark"] .sidebar-logo {
+    color: #ffffff;
+    border-bottom: 1px solid #27272a;
+}
+:root[data-theme="dark"] .sidebar-nav a {
+    color: #94a3b8;
+}
+:root[data-theme="dark"] .sidebar-nav a:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: #f8fafc;
+}
+:root[data-theme="dark"] .sidebar-nav a.active {
+    background: #10b981;
+    color: #ffffff;
+}
+:root[data-theme="dark"] .sidebar-footer {
+    border-top: 1px solid #27272a;
+}
+:root[data-theme="dark"] .user-name {
+    color: #f8fafc;
+}
+:root[data-theme="dark"] .user-role {
+    color: #94a3b8;
+}

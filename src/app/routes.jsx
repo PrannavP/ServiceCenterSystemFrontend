@@ -6,6 +6,7 @@ import PublicRoute from "../guards/PublicRoutes";
 
 import Login from "../pages/auth/Login";
 import ForgotPassword from "../pages/auth/ForgotPassword";
+import ForcePasswordChange from "../pages/auth/ForcePasswordChange";
 import Landing from "../pages/Landing";
 import Dashboard from "../pages/dashboard/Dashboard";
 
@@ -17,6 +18,8 @@ import PartManagePage from "../pages/app/part/PartManagePage";
 import ReceiptListPage from "../pages/app/receipt/ReceiptListPage";
 import ReceiptManagePage from "../pages/app/receipt/ReceiptManagePage";
 import BillListPage from "../pages/app/billing/BillingListPage";
+import UserManagement from "../pages/app/admin/UserManagement";
+import ProfileSettings from "../pages/app/profile/ProfileSettings";
 
 export const routes = [
     {
@@ -34,6 +37,10 @@ export const routes = [
                 path: "/forgot-password",
                 element: <ForgotPassword />,
             },
+            {
+                path: "/force-password-change",
+                element: <ForcePasswordChange />,
+            }
         ],
     },
 
@@ -87,6 +94,14 @@ export const routes = [
             {
                 path: '/app/billing',
                 element: <BillListPage />
+            },
+            {
+                path: '/app/admin/users',
+                element: <UserManagement />
+            },
+            {
+                path: '/app/profile',
+                element: <ProfileSettings />
             }
         ],
     },

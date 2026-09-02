@@ -5,12 +5,12 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    background: #18181b; 
-    color: #f8fafc;
+    background: #ffffff; 
+    color: #0f172a;
     padding: 24px 18px;
     box-sizing: border-box;
     overflow-y: auto;
-    border-right: 1px solid #27272a;
+    border-right: 1px solid #e2e8f0;
 }
 
 .sidebar-top {
@@ -25,9 +25,9 @@
     gap: 12px;
     font-size: 20px;
     font-weight: 700;
-    color: #ffffff;
+    color: #0f172a;
     padding-bottom: 12px;
-    border-bottom: 1px solid #27272a;
+    border-bottom: 1px solid #e2e8f0;
 }
 
 .logo-badge {
@@ -51,7 +51,7 @@
     gap: 10px;
     padding: 12px 16px;
     border-radius: 10px;
-    color: #94a3b8;
+    color: #64748b;
     font-size: 15px;
     font-weight: 500;
     text-decoration: none;
@@ -59,13 +59,13 @@
 }
 
 .sidebar-nav a:hover {
-    background: rgba(255, 255, 255, 0.05);
-    color: #f8fafc;
+    background: #f1f5f9;
+    color: #0f172a;
 }
 
 .sidebar-nav a.active {
-    background: #10b981;
-    color: #ffffff;
+    background: #ecfdf5;
+    color: #10b981;
     font-weight: 600;
 }
 
@@ -74,7 +74,7 @@
     flex-direction: column;
     gap: 16px;
     padding-top: 16px;
-    border-top: 1px solid #27272a;
+    border-top: 1px solid #e2e8f0;
 }
 
 .user-profile {
@@ -87,7 +87,7 @@
     width: 38px;
     height: 38px;
     border-radius: 50%;
-    background: #f59e0b; 
+    background: #10b981; 
     color: #ffffff;
     display: flex;
     align-items: center;
@@ -105,7 +105,7 @@
 .user-name {
     font-size: 14px;
     font-weight: 600;
-    color: #f8fafc;
+    color: #0f172a;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -113,15 +113,15 @@
 
 .user-role {
     font-size: 12px;
-    color: #94a3b8;
+    color: #64748b;
 }
 
 .logout-btn {
     width: 100%;
     padding: 10px;
     background: transparent;
-    color: #f59e0b;
-    border: 1px solid #f59e0b;
+    color: #ef4444;
+    border: 1px solid #ef4444;
     border-radius: 8px;
     font-weight: 600;
     cursor: pointer;
@@ -129,6 +129,59 @@
 }
 
 .logout-btn:hover {
-    background: #f59e0b;
+    background: #ef4444;
     color: #ffffff;
+}
+
+/* Sidebar Collapse Styles (Desktop) */
+.sidebar.collapsed {
+    width: 80px;
+    padding: 24px 12px;
+}
+
+.sidebar.collapsed .sidebar-logo {
+    justify-content: center;
+}
+
+.sidebar.collapsed .sidebar-nav a {
+    justify-content: center;
+    padding: 12px;
+}
+
+.sidebar.collapsed .sidebar-footer {
+    align-items: center;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        left: -300px;
+        top: 0;
+        bottom: 0;
+        z-index: 50;
+        width: 260px !important;
+        transition: transform 0.3s ease-in-out;
+        box-shadow: 4px 0 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .sidebar.mobile-open {
+        transform: translateX(300px);
+    }
+
+    /* On mobile, we ignore the 'collapsed' class styles */
+    .sidebar.collapsed .sidebar-logo,
+    .sidebar.collapsed .sidebar-nav a,
+    .sidebar.collapsed .sidebar-footer {
+        justify-content: flex-start;
+        align-items: flex-start;
+    }
+    
+    .sidebar.collapsed .sidebar-nav a {
+        padding: 12px 16px;
+    }
+    
+    .sidebar-collapse-btn {
+        display: none; /* Hide desktop collapse button on mobile */
+    }
 }

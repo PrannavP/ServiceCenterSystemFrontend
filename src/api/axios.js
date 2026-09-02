@@ -12,6 +12,13 @@ axiosInstance.interceptors.request.use(
             config.headers["x-auth-token"] = token;
             config.headers.Authorization = `Bearer ${token}`;
         }
+
+        const impersonated = localStorage.getItem("impersonated_service_center");
+        if (impersonated) {
+            config.params = config.params || {};
+            config.params.service_center_id = impersonated;
+        }
+
         return config;
     },
     (error) => Promise.reject(error)

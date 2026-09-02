@@ -212,8 +212,45 @@ export default function PartManagePage({ isEdit = false }) {
                                     </label>
                                 </div>
 
-                                {}
-                                {}
+                                <div className="form-group col-4">
+                                    <label className="form-label">Part Image</label>
+                                    <div className="image-upload-wrapper">
+                                        <div className="image-upload-zone" onClick={() => document.getElementById('part-image-input').click()}>
+                                            <input 
+                                                id="part-image-input" 
+                                                type="file" 
+                                                accept="image/png, image/jpeg, image/webp" 
+                                                style={{ display: 'none' }} 
+                                                onChange={onImageChange} 
+                                            />
+                                            {!imagePreview && !existingImage ? (
+                                                <div className="upload-placeholder">
+                                                    <span className="upload-icon">📁</span>
+                                                    <p>Click or drag image to upload</p>
+                                                    <small>PNG, JPG, WebP up to 5MB</small>
+                                                </div>
+                                            ) : null}
+                                        </div>
+                                        
+                                        {(imagePreview || existingImage) && (
+                                            <div className="image-preview">
+                                                <img src={imagePreview || (existingImage.startsWith('http') ? existingImage : `${API_BASE}${existingImage}`)} alt="Part Preview" />
+                                                <button 
+                                                    type="button" 
+                                                    className="remove-image-btn"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        setImageFile(null);
+                                                        setImagePreview(null);
+                                                        if (existingImage) setExistingImage(null);
+                                                    }}
+                                                >
+                                                    <FiX size={16} />
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
 
                                 <div className="form-footer col-4">
                                     <button
